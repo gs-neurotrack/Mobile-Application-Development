@@ -15,7 +15,8 @@ import styles from './style';
 import InputField from '../../components/InputField/InputField';
 import { ROUTES } from '../../navigation/routes';
 import { registerApi } from '../../services/authService';
-import { fetchLimits, GsLimit } from '../../services/limitsService'; // 👈 AJUSTE AQUI
+import { fetchLimits, GsLimit } from '../../services/limitsService'; 
+import TrackedButton from '../../components/TrackedButton/trackedButton';
 
 const cargoOptions = [
   { id: 1, label: 'Coordenador', value: 'Coordenador' },
@@ -105,7 +106,7 @@ const Register = () => {
         limitsId: selectedLimitId, // id vindo da API C#
       };
 
-      console.log('➡️ [REGISTER PAYLOAD]', payload);
+      console.log('[REGISTER PAYLOAD]', payload);
 
       await registerApi(payload);
 

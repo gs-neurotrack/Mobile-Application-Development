@@ -5,6 +5,8 @@ import styles from './style';
 import InputField from '../../components/InputField/InputField';
 import { ROUTES } from '../../navigation/routes'; 
 import { loginApi } from '../../services/authService';
+import TrackedButton from '../../components/TrackedButton/trackedButton';
+
 
 
 
@@ -84,9 +86,9 @@ const handleLogin = async () => {
      
         <Text style={{ marginTop: 20, color: '#000000' }}>
           Não possui uma conta? 
-          <TouchableOpacity onPress={() => router.push(ROUTES.REGISTER)}>
+          <TrackedButton  onPress={() => router.push(ROUTES.REGISTER)}>
             <Text style={{ marginTop: 20, color: '#80c6ac' }}> Cadastre-se</Text>
-          </TouchableOpacity>
+          </TrackedButton >
         </Text>
       
     </View>

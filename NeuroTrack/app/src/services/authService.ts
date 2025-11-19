@@ -1,7 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { usageTracker } from '../services/usageTracker';
+
+
 export const API_URL = 'http://163.176.216.51:8080';
-export const LIMITS_API_URL = 'http://163.176.216.51:5162';
+
 
 // ======================
 // TIPOS
@@ -14,7 +17,6 @@ export type LoginResponseRaw = {
   id?: number;
   userId?: number;
   userID?: number;
-  // outros campos possíveis, caso existam
   [key: string]: any;
 };
 
@@ -103,6 +105,7 @@ export async function loginApi(email: string, password: string) {
   // SALVA ID DO USUÁRIO
   if (data.id) {
     await AsyncStorage.setItem('userId', String(data.id));
+    usageTracker.startSession(data.id);
     console.log(' ID SALVO:', data.id);
   } else {
     console.log(' API não enviou ID!');

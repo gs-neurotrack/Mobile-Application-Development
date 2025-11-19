@@ -1,11 +1,13 @@
 // src/screens/Menu/MenuScreen.tsx
 import React, { useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, Image } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, Image, Alert, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import styles from './style';
 import MenuButton from '../../components/MenuButton/menubutton';
 import { ROUTES } from '../../navigation/routes';
 import InputField from '../../components/InputField/InputField';
+import { endWorkdayFlow } from '../../services/endWorkdayFlow';
+
 
 const ADMIN_PASSWORD = 'admin123'; // senha mockada
 
@@ -37,6 +39,31 @@ const MenuScreen = () => {
     setAdminModalVisible(false);
     setAdminPassword('');
     setAdminError('');
+  };
+  const [ending, setEnding] = useState(false);
+
+  const handleEndWorkday = async () => {
+    if (ending) return;
+
+    Alert.alert(
+      'Encerrar expediente',
+      'Você deseja encerrar seu expediente e enviar os dados de uso?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Confirmar',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              setEnding(true);
+              await endWorkdayFlow();
+            } finally {
+              setEnding(false);
+            }
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -75,6 +102,17 @@ const MenuScreen = () => {
           label="Adicionar"
           onPress={() => alert('Adicionar')}
         />
+         <TouchableOpacity
+        style={styles.buttonExit}
+        onPress={handleEndWorkday}
+        disabled={ending}
+      >
+        {ending ? (
+          <ActivityIndicator color="#FFF" />
+        ) : (
+          <Text style={styles.buttonTextExit}>Encerrar expediente</Text>
+        )}
+      </TouchableOpacity>
       </View>
 
       {/* MODAL DE SENHA ADMIN */}

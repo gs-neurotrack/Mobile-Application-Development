@@ -19,31 +19,31 @@ const Login = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   
-  const handleLogin = async () => {
-    
-    setMessage('');
+const handleLogin = async () => {
+  setMessage('');
 
-    if(!email || !password){
+  if (!email || !password) {
+    setMessage('Preencha todos os campos.');
+    return;
+  }
 
-      setMessage('Preencha todos os campos.');
-      return;
+  try {
+    setIsLoggedIn(true);
 
-    }
-    try{
-      setIsLoggedIn(true);
+    const data = await loginApi(email, password);
 
-      
-       await loginApi(email, password);
-       setMessage('Login bem-sucedido!');
+    console.log("LOGIN OK - ID:", data.id);
+    console.log("LOGIN OK - TOKEN:", data.token);
 
-       router.replace(ROUTES.REGISTER);
-    }
-    catch(error: any){
-      setMessage(error.message);
-    }finally{
-      setIsLoggedIn(false);
-    }
-  };
+    router.replace(ROUTES.MENU);
+
+  } catch (error: any) {
+    console.log(error);
+    setMessage(error.message || 'Erro ao fazer login.');
+  } finally {
+    setIsLoggedIn(false);
+  }
+};
 
  return (
     <View style={styles.container}>

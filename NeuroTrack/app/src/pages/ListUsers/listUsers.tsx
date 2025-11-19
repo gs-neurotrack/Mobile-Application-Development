@@ -11,6 +11,7 @@ import { useRouter } from 'expo-router';
 import styles from './style';
 import { fetchUsersPage, User } from '../../services/authService';
 import { ROUTES } from '../../navigation/routes';
+import Hotbar from '../../components/HotBar/hotbar';
 
 const PAGE_SIZE = 5; // 👈 pode ser 1, 5, 10... mas bate com "itens"
 
@@ -138,6 +139,8 @@ const AdminUsersScreen = () => {
           }
         />
       )}
+            <Hotbar/>
+
     </View>
   );
 };

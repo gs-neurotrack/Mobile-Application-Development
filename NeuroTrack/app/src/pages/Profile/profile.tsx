@@ -27,6 +27,8 @@ import {
 
 import { fetchLimits, GsLimit } from '../../services/limitsService';
 
+import Hotbar from '../../components/HotBar/hotbar';
+
 // 🔹 Opções mockadas de cargo (apenas para exibir label)
 const cargoOptions = [
   { id: 1, label: 'Coordenador', value: 'Coordenador' },
@@ -337,6 +339,8 @@ const ProfileScreen = () => {
           </View>
         </View>
       </Modal>
+            <Hotbar />
+
     </View>
   );
 };

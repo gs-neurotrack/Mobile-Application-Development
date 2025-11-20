@@ -15,18 +15,20 @@ import styles from './style';
 import InputField from '../../components/InputField/InputField';
 import { ROUTES } from '../../navigation/routes';
 import { registerApi } from '../../services/authService';
-import { fetchLimits, GsLimit } from '../../services/limitsService'; 
-import TrackedButton from '../../components/TrackedButton/trackedButton';
+import { fetchLimits, GsLimit } from '../../services/limitsService';
 
 const cargoOptions = [
-  { id: 1, label: 'Coordenador', value: 'Coordenador' },
-  { id: 2, label: 'Colaborador', value: 'Colaborador' },
+  { id: 7, label: 'Coordenador', value: 'Coordenador' },
+  { id: 41, label: 'Colaborador', value: 'Colaborador' },
 ];
 
 type LimitOption = {
   id: number;
   label: string;
 };
+
+// regex simples pra validar email
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const Register = () => {
   const router = useRouter();
@@ -36,11 +38,16 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
-  // CARGO
+  // erros por campo
+  const [nameError, setNameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [cargoError, setCargoError] = useState('');
+  const [limitError, setLimitError] = useState('');
+
   const [selectedCargoId, setSelectedCargoId] = useState<number | null>(null);
   const [cargoModalVisible, setCargoModalVisible] = useState(false);
 
-  // LIMITES vindos da API C#
   const [limitOptions, setLimitOptions] = useState<LimitOption[]>([]);
   const [selectedLimitId, setSelectedLimitId] = useState<number | null>(null);
   const [limitModalVisible, setLimitModalVisible] = useState(false);
@@ -50,15 +57,16 @@ const Register = () => {
 
   const selectedCargoLabel =
     selectedCargoId != null
-      ? cargoOptions.find((opt) => opt.id === selectedCargoId)?.label ?? 'Selecione seu cargo'
+      ? cargoOptions.find((opt) => opt.id === selectedCargoId)?.label ??
+        'Selecione seu cargo'
       : 'Selecione seu cargo';
 
   const selectedLimitLabel =
     selectedLimitId != null
-      ? limitOptions.find((opt) => opt.id === selectedLimitId)?.label ?? 'Selecione seu limite'
+      ? limitOptions.find((opt) => opt.id === selectedLimitId)?.label ??
+        'Selecione seu limite'
       : 'Selecione seu limite';
 
-  // ====== CARREGA LIMITES DA API C# ======
   useEffect(() => {
     const loadLimits = async () => {
       try {
@@ -68,9 +76,11 @@ const Register = () => {
 
         const mapped: LimitOption[] = data.map((item) => ({
           id: item.id,
-          label: `${item.limitHours} hora${item.limitHours > 1 ? 's' : ''} | ${
-            item.limitMeetings
-          } reuni${item.limitMeetings > 1 ? 'ões' : 'ão'}`,
+          label: `${item.limitHours} hora${
+            item.limitHours > 1 ? 's' : ''
+          } | ${item.limitMeetings} reuni${
+            item.limitMeetings > 1 ? 'ões' : 'ão'
+          }`,
         }));
 
         setLimitOptions(mapped);
@@ -85,12 +95,61 @@ const Register = () => {
     loadLimits();
   }, []);
 
-  // ====== CADASTRAR ======
   const handleRegister = async () => {
+    // limpa mensagens gerais e por campo
     setMessage('');
+    setNameError('');
+    setEmailError('');
+    setPasswordError('');
+    setCargoError('');
+    setLimitError('');
 
-    if (!name || !email || !password || !selectedCargoId || !selectedLimitId) {
-      setMessage('Preencha todos os campos e selecione cargo e limite.');
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim();
+
+    let hasError = false;
+
+    // valida nome
+    if (!trimmedName) {
+      setNameError('Informe seu nome completo.');
+      hasError = true;
+    } else if (trimmedName.length < 12) {
+      setNameError('Nome muito curto. Use pelo menos 12 caracteres.');
+      hasError = true;
+    }
+
+    // valida email
+    if (!trimmedEmail) {
+      setEmailError('Informe um e-mail.');
+      hasError = true;
+    } else if (!emailRegex.test(trimmedEmail)) {
+      setEmailError('E-mail inválido. Verifique o formato (ex: nome@empresa.com).');
+      hasError = true;
+    }
+
+    // valida senha
+    if (!password) {
+      setPasswordError('Informe uma senha.');
+      hasError = true;
+    } else if (password.length < 6) {
+      setPasswordError('Senha muito curta. Use pelo menos 6 caracteres.');
+      hasError = true;
+    }
+
+    // valida cargo
+    if (!selectedCargoId) {
+      setCargoError('Selecione um cargo para continuar.');
+      hasError = true;
+    }
+
+    // valida limite
+    if (!selectedLimitId) {
+      setLimitError('Selecione um limite de horas e reuniões.');
+      hasError = true;
+    }
+
+    if (hasError) {
+      // não chama API se tiver erro de validação
       return;
     }
 
@@ -98,12 +157,12 @@ const Register = () => {
       setSaving(true);
 
       const payload = {
-        name,
-        email,
+        name: trimmedName,
+        email: trimmedEmail,
         password,
-        status: 'A', // fixo
-        roleId: selectedCargoId,
-        limitsId: selectedLimitId, // id vindo da API C#
+        status: 'A',
+        roleId: selectedCargoId!,
+        limitsId: selectedLimitId!,
       };
 
       console.log('[REGISTER PAYLOAD]', payload);
@@ -133,36 +192,51 @@ const Register = () => {
       <ScrollView style={{ width: '100%' }}>
         <Text style={styles.titleDate}>Dados Pessoais</Text>
 
+        {/* NOME */}
         <InputField
           placeholder="Digite seu nome completo"
           value={name}
           onChangeText={(t) => {
             setName(t);
+            if (nameError) setNameError('');
             if (message) setMessage('');
           }}
           keyboardType="default"
         />
+        {nameError ? (
+          <Text style={styles.text_message}>{nameError}</Text>
+        ) : null}
 
+        {/* EMAIL */}
         <InputField
           placeholder="Digite seu email"
           value={email}
           onChangeText={(t) => {
             setEmail(t);
+            if (emailError) setEmailError('');
             if (message) setMessage('');
           }}
           keyboardType="email-address"
         />
+        {emailError ? (
+          <Text style={styles.text_message}>{emailError}</Text>
+        ) : null}
 
+        {/* SENHA */}
         <InputField
           placeholder="Digite sua senha"
           value={password}
           onChangeText={(t) => {
             setPassword(t);
+            if (passwordError) setPasswordError('');
             if (message) setMessage('');
           }}
           secureTextEntry
           keyboardType="default"
         />
+        {passwordError ? (
+          <Text style={styles.text_message}>{passwordError}</Text>
+        ) : null}
 
         {/* CARGO */}
         <Text style={styles.titleDate}>Cargo</Text>
@@ -174,6 +248,9 @@ const Register = () => {
             {selectedCargoLabel}
           </Text>
         </TouchableOpacity>
+        {cargoError ? (
+          <Text style={styles.text_message}>{cargoError}</Text>
+        ) : null}
 
         {/* LIMITE */}
         <Text style={styles.titleDate}>Limite</Text>
@@ -193,9 +270,14 @@ const Register = () => {
             </Text>
           )}
         </TouchableOpacity>
+        {limitError ? (
+          <Text style={styles.text_message}>{limitError}</Text>
+        ) : null}
 
+        {/* MENSAGEM GERAL (erro da API / sucesso) */}
         {message ? <Text style={styles.text_message}>{message}</Text> : null}
 
+        {/* BOTÃO CADASTRAR */}
         <TouchableOpacity
           style={styles.button}
           onPress={handleRegister}
@@ -232,6 +314,7 @@ const Register = () => {
                 <TouchableOpacity
                   onPress={() => {
                     setSelectedCargoId(item.id);
+                    setCargoError('');
                     setCargoModalVisible(false);
                   }}
                   style={styles.flatListItem}
@@ -269,6 +352,7 @@ const Register = () => {
                 <TouchableOpacity
                   onPress={() => {
                     setSelectedLimitId(item.id);
+                    setLimitError('');
                     setLimitModalVisible(false);
                   }}
                   style={styles.flatListItem}

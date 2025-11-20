@@ -67,6 +67,38 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666',
   },
+    paginationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 12,
+    paddingHorizontal: 8,
+  },
+  paginationButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    backgroundColor: '#0b1120',
+    borderWidth: 1,
+    borderColor: '#1f2937',
+  },
+  paginationButtonDisabled: {
+    backgroundColor: '#111827',
+    borderColor: '#4b5563',
+  },
+  paginationButtonText: {
+    color: '#e5e7eb',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  paginationButtonTextDisabled: {
+    color: '#9ca3af',
+  },
+  paginationInfo: {
+    color: '#e5e7eb',
+    fontSize: 14,
+  },
+
 });
 
 export default styles;

@@ -7,7 +7,8 @@ export const ROUTES = {
   PROFILE: '/Profile/profile',
   LIST_USER: '/ListUsers/listUsers',
   SCORES: '/Scores/scores', 
-  SCORES_ADMIN: '/ScoresAdmin/scoresAdmin'
+  SCORES_ADMIN: '/ScoresAdmin/scoresAdmin',
+  ABOUT: '/About/AboutNeuroTrackScreen'
 
  
 } as const satisfies Record<string, Href>;

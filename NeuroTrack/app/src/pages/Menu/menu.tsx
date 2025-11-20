@@ -137,14 +137,14 @@ const handleEndWorkday = async () => {
 
         <MenuButton
           icon="search-outline"
-          label="Buscar Admin"
+          label="Buscar Usuários"
           onPress={handleOpenAdminModal}
         />
 
         <MenuButton
           icon="add-circle-outline"
           label="Adicionar"
-          onPress={() => alert('Adicionar')}
+          onPress={() => router.push(ROUTES.ABOUT)}
         />
          <TouchableOpacity
         style={styles.buttonExit}

@@ -1,3 +1,4 @@
+// src/screens/AdminUsers/AdminUsersScreen.tsx (ou caminho equivalente)
 import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
@@ -14,67 +15,66 @@ import { ROUTES } from '../../navigation/routes';
 import Hotbar from '../../components/HotBar/hotbar';
 import GlobalTouchTracker from '../../components/GlobalTouchTracker/globalTouchTracker';
 
-const PAGE_SIZE = 5; // 👈 pode ser 1, 5, 10... mas bate com "itens"
+const UI_PAGE_SIZE = 5; // 👈 5 usuários por página na interface
 
 const AdminUsersScreen = () => {
   const router = useRouter();
 
-  const [users, setUsers] = useState<User[]>([]);
-  const [page, setPage] = useState(0);          // 👈 começa em 0
-  const [isLastPage, setIsLastPage] = useState(false);
+  const [allUsers, setAllUsers] = useState<User[]>([]); // todos filtrados (id >= 31)
+  const [currentPage, setCurrentPage] = useState(1);    // página da UI (1,2,3...)
+  const [totalPages, setTotalPages] = useState(1);
+
   const [loadingInitial, setLoadingInitial] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [message, setMessage] = useState('');
 
-  const loadPage = useCallback(
-    async (pageToLoad: number, replace: boolean = false) => {
-      try {
-        if (replace) {
-          setMessage('');
-        }
+  // 🔹 Carrega TODAS as páginas do backend, filtra id >= 31 e pagina na UI
+  const loadAllUsers = useCallback(async () => {
+    try {
+      setMessage('');
+      setLoadingInitial(true);
 
-        const data = await fetchUsersPage(pageToLoad, PAGE_SIZE);
+      let accumulated: User[] = [];
+      let pageBackend = 0;
+      let lastBackendPage = false;
 
-        setIsLastPage(data.last);
-
-        if (replace) {
-          setUsers(data.content);
-        } else {
-          setUsers((prev) => [...prev, ...data.content]);
-        }
-
-        // 👇 controla a página atual pelo que você pediu
-        setPage(pageToLoad);
-      } catch (err: any) {
-        console.log(err);
-        setMessage(err.message || 'Erro ao carregar usuários.');
-      } finally {
-        setLoadingInitial(false);
-        setLoadingMore(false);
-        setRefreshing(false);
+      // busca todas as páginas do backend
+      while (!lastBackendPage) {
+        const data = await fetchUsersPage(pageBackend, 20); // 20 por página no backend (pode ajustar)
+        accumulated = [...accumulated, ...data.content];
+        lastBackendPage = data.last;
+        pageBackend += 1;
       }
-    },
-    []
-  );
+
+      // 🔹 FILTRA SOMENTE usuários com ID >= 31
+      const filtered = accumulated.filter((u) => u.id >= 31);
+
+      if (filtered.length === 0) {
+        setMessage('Nenhum usuário encontrado com ID a partir de 31.');
+      }
+
+      setAllUsers(filtered);
+
+      const pages = Math.max(1, Math.ceil(filtered.length / UI_PAGE_SIZE));
+      setTotalPages(pages);
+      setCurrentPage(1); // sempre volta para a primeira página
+    } catch (err: any) {
+      console.log(err);
+      setMessage(err.message || 'Erro ao carregar usuários.');
+    } finally {
+      setLoadingInitial(false);
+      setRefreshing(false);
+    }
+  }, []);
 
   // Carregamento inicial
   useEffect(() => {
-    loadPage(0, true);   // 👈 primeira página = 0
-  }, [loadPage]);
+    loadAllUsers();
+  }, [loadAllUsers]);
 
   const onRefresh = () => {
     setRefreshing(true);
-    setIsLastPage(false);
-    loadPage(0, true);   // 👈 recarrega a página 0
-  };
-
-  const loadMore = () => {
-    if (loadingMore || isLastPage || loadingInitial) return;
-
-    setLoadingMore(true);
-    const nextPage = page + 1;   // 0 → 1 → 2...
-    loadPage(nextPage, false);
+    loadAllUsers();
   };
 
   const getRoleName = (user: User): string => {
@@ -82,20 +82,29 @@ const AdminUsersScreen = () => {
     return 'Cargo não informado';
   };
 
-const handleOpenUserDetails = (user: User) => {
-  router.push({
-    pathname: ROUTES.SCORES_ADMIN, // rota da tela de previsão do gestor
-    params: {
-      userId: String(user.id),
-      userName: user.name,
-    },
-  });
-};
+  const handleOpenUserDetails = (user: User) => {
+    router.push({
+      pathname: ROUTES.SCORES_ADMIN, // rota da tela de previsão do gestor
+      params: {
+        userId: String(user.id),
+        userName: user.name,
+      },
+    });
+  };
 
+  // 🔹 Fatia os usuários da página atual (UI_PAGE_SIZE = 5)
+  const startIndex = (currentPage - 1) * UI_PAGE_SIZE;
+  const endIndex = startIndex + UI_PAGE_SIZE;
+  const usersPage = allUsers.slice(startIndex, endIndex);
 
   if (loadingInitial) {
     return (
-      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+      <View
+        style={[
+          styles.container,
+          { justifyContent: 'center', alignItems: 'center' },
+        ]}
+      >
         <ActivityIndicator />
         <Text style={{ marginTop: 10 }}>Carregando usuários...</Text>
       </View>
@@ -104,49 +113,92 @@ const handleOpenUserDetails = (user: User) => {
 
   return (
     <GlobalTouchTracker>
-    <View style={styles.container}>
-      {/* HEADER SIMPLES */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Usuários cadastrados</Text>
-      </View>
-
-      {message ? <Text style={styles.errorText}>{message}</Text> : null}
-
-      {users.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>Nenhum usuário encontrado.</Text>
+      <View style={styles.container}>
+        {/* HEADER SIMPLES */}
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Usuários cadastrados (ID ≥ 31)</Text>
         </View>
-      ) : (
-        <FlatList
-          data={users}
-          keyExtractor={(item) => String(item.id)}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-          contentContainerStyle={styles.listContent}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.userCard}
-              onPress={() => handleOpenUserDetails(item)}
-            >
-              <Text style={styles.userName}>{item.name}</Text>
-              <Text style={styles.userRole}>{getRoleName(item)}</Text>
-            </TouchableOpacity>
-          )}
-          onEndReachedThreshold={0.4}
-          onEndReached={loadMore}
-          ListFooterComponent={
-            loadingMore ? (
-              <View style={{ paddingVertical: 10 }}>
-                <ActivityIndicator />
-              </View>
-            ) : null
-          }
-        />
-      )}
-            <Hotbar/>
 
-    </View>
+        {message ? <Text style={styles.errorText}>{message}</Text> : null}
+
+        {usersPage.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>Nenhum usuário encontrado.</Text>
+          </View>
+        ) : (
+          <>
+            <FlatList
+              data={usersPage}
+              keyExtractor={(item) => String(item.id)}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+              contentContainerStyle={styles.listContent}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={styles.userCard}
+                  onPress={() => handleOpenUserDetails(item)}
+                >
+                  <Text style={styles.userName}>{item.name}</Text>
+                  <Text style={styles.userRole}>{getRoleName(item)}</Text>
+                </TouchableOpacity>
+              )}
+            />
+
+            {/* 🔹 Paginação da UI */}
+            <View style={styles.paginationContainer}>
+              <TouchableOpacity
+                style={[
+                  styles.paginationButton,
+                  currentPage === 1 && styles.paginationButtonDisabled,
+                ]}
+                disabled={currentPage === 1}
+                onPress={() =>
+                  setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev))
+                }
+              >
+                <Text
+                  style={[
+                    styles.paginationButtonText,
+                    currentPage === 1 && styles.paginationButtonTextDisabled,
+                  ]}
+                >
+                  Anterior
+                </Text>
+              </TouchableOpacity>
+
+              <Text style={styles.paginationInfo}>
+                Página {currentPage} de {totalPages}
+              </Text>
+
+              <TouchableOpacity
+                style={[
+                  styles.paginationButton,
+                  currentPage === totalPages && styles.paginationButtonDisabled,
+                ]}
+                disabled={currentPage === totalPages}
+                onPress={() =>
+                  setCurrentPage((prev) =>
+                    prev < totalPages ? prev + 1 : prev
+                  )
+                }
+              >
+                <Text
+                  style={[
+                    styles.paginationButtonText,
+                    currentPage === totalPages &&
+                      styles.paginationButtonTextDisabled,
+                  ]}
+                >
+                  Próxima
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+
+        <Hotbar />
+      </View>
     </GlobalTouchTracker>
   );
 };

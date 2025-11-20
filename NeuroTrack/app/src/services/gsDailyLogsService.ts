@@ -5,9 +5,9 @@ const CSHARP_API_URL = 'http://163.176.216.51:5162';
 
 type GsDailyLogRequest = {
   idLog: number;
-  workHours: number;
+  workHours: number;  // vai receber MINUTOS
   meetings: number;
-  logDate: string; // pode ser ignorado pelo backend se ele gerar
+  logDate: string;
   idUser: number;
 };
 
@@ -22,15 +22,14 @@ export async function sendDailyLogToCSharp() {
   const nowIso = new Date().toISOString();
 
   const payload: GsDailyLogRequest = {
-    idLog: 0, // backend deve ignorar e gerar o próprio ID
-    workHours: data.workHoursExtra,  // 👈 horas além das 8h
+    idLog: 0,
+    workHours: data.workMinutes,   // 👈 AGORA SÃO MINUTOS
     meetings: data.meetings,
-    logDate: nowIso,                 // você comentou que a API gera a data;
-                                     // se ela não usar esse campo, tudo bem.
+    logDate: nowIso,
     idUser: data.idUser,
   };
 
-  console.log('[GsDailyLogs] Enviando payload:', payload);
+  console.log('[GsDailyLogs] Enviando payload C#:', payload);
 
   const response = await fetch(`${CSHARP_API_URL}/api/GsDailyLogs`, {
     method: 'POST',
@@ -45,7 +44,7 @@ export async function sendDailyLogToCSharp() {
 
   if (!response.ok) {
     throw new Error(
-      `Erro ao salvar log diário na API C#: ${response.status} - ${text}`,
+      `Erro ao salvar log diário na API C#: ${response.status} - ${text}`
     );
   }
 }

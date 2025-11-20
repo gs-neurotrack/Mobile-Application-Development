@@ -28,6 +28,7 @@ import {
 import { fetchLimits, GsLimit } from '../../services/limitsService';
 
 import Hotbar from '../../components/HotBar/hotbar';
+import GlobalTouchTracker from '../../components/GlobalTouchTracker/globalTouchTracker';
 
 // 🔹 Opções mockadas de cargo (apenas para exibir label)
 const cargoOptions = [
@@ -216,6 +217,7 @@ const ProfileScreen = () => {
 
   // --------- TELA DE PERFIL ---------
   return (
+    <GlobalTouchTracker>
     <View style={styles.container}>
       <Image
         source={require('../../img/logo_neuro_track.png')}
@@ -342,6 +344,7 @@ const ProfileScreen = () => {
             <Hotbar />
 
     </View>
+    </GlobalTouchTracker>
   );
 };
 

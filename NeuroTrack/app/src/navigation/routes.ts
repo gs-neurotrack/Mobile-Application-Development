@@ -5,6 +5,9 @@ export const ROUTES = {
   MENU: '/Menu/menu',
   REGISTER: '/Register/register',
   PROFILE: '/Profile/profile',
-  LIST_USER: '/ListUsers/listUsers'
+  LIST_USER: '/ListUsers/listUsers',
+  SCORES: '/Scores/scores', 
+  SCORES_ADMIN: '/ScoresAdmin/scoresAdmin'
+
  
 } as const satisfies Record<string, Href>;

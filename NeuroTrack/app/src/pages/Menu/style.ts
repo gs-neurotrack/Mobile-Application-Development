@@ -103,4 +103,64 @@ export default StyleSheet.create({
     color: '#fff',
     textAlign: 'center',
   },  
+  // no seu style.ts do Menu, adicione:
+card: {
+  width: '100%',
+  backgroundColor: '#ffffff',
+  borderRadius: 12,
+  padding: 16,
+  marginTop: 16,
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.1,
+  shadowRadius: 4,
+  elevation: 2,
+},
+
+cardTitle: {
+  fontSize: 16,
+  fontWeight: '600',
+  color: '#111827',
+  marginBottom: 12,
+},
+
+meetingsRow: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+},
+
+meetingsButton: {
+  width: 40,
+  height: 40,
+  borderRadius: 20,
+  backgroundColor: '#80c6ac',
+  alignItems: 'center',
+  justifyContent: 'center',
+},
+
+meetingsButtonText: {
+  color: '#fff',
+  fontSize: 20,
+  fontWeight: '700',
+},
+
+meetingsInput: {
+  flex: 1,
+  marginHorizontal: 12,
+  borderWidth: 1,
+  borderColor: '#d1d5db',
+  borderRadius: 8,
+  paddingHorizontal: 10,
+  paddingVertical: 6,
+  textAlign: 'center',
+  color: '#111827',
+},
+
+meetingsHint: {
+  marginTop: 8,
+  fontSize: 12,
+  color: '#6b7280',
+},
+
 });

@@ -1,9 +1,9 @@
 // src/services/usageTracker.ts
-import { AppState } from 'react-native';
+import { AppState, AppStateStatus } from 'react-native';
 
 export type UsagePayload = {
   idUser: number;
-  workHours: number;     // total de horas trabalhadas
+  workHours: number;     // horas (para Python)
   meetings: number;
   clicks: number;
   doubleClicks: number;
@@ -14,17 +14,18 @@ class UsageTracker {
   private static _instance: UsageTracker;
 
   private userId: number | null = null;
-  private sessionStart: number | null = null; // Date.now()
+  private sessionStartMs: number | null = null;
+  private lastResumeMs: number | null = null;
+  private accumulatedActiveMs = 0;
+
   private clicks = 0;
   private doubleClicks = 0;
-  private meetings = 0; // você incrementa onde fizer sentido
+  private meetings = 0;
+
+  private currentAppState: AppStateStatus = 'active';
 
   private constructor() {
-    AppState.addEventListener('change', (state) => {
-      if (state === 'background') {
-        // no futuro, dá pra salvar parcial
-      }
-    });
+    AppState.addEventListener('change', this.handleAppStateChange);
   }
 
   public static get instance() {
@@ -35,43 +36,118 @@ class UsageTracker {
   }
 
   startSession(userId: number) {
+    const now = Date.now();
+
     this.userId = userId;
-    this.sessionStart = Date.now();
+    this.sessionStartMs = now;
+    this.lastResumeMs = now;
+    this.accumulatedActiveMs = 0;
+
     this.clicks = 0;
     this.doubleClicks = 0;
     this.meetings = 0;
+
     console.log('[UsageTracker] Sessão iniciada para user', userId);
   }
 
   registerClick() {
+    if (!this.userId) return;
     this.clicks += 1;
   }
 
   registerDoubleClick() {
+    if (!this.userId) return;
     this.doubleClicks += 1;
   }
 
   registerMeeting() {
+    if (!this.userId) return;
     this.meetings += 1;
   }
-
-  private computeWorkHours(): number {
-    if (!this.sessionStart) return 0;
-    const now = Date.now();
-    const diffMs = now - this.sessionStart;
-    const diffHours = diffMs / (1000 * 60 * 60);
-    return Number(diffHours.toFixed(2)); // 2 casas decimais
+    getMeetings(): number {
+    return this.meetings;
   }
 
-  // 👉 Payload completo (pra Python, por exemplo)
+
+
+    setMeetings(value: number) {
+    if (!this.userId) return; // sem sessão, ignora
+    const safe = Number.isFinite(value) ? Math.max(0, Math.floor(value)) : 0;
+    this.meetings = safe;
+    console.log('[UsageTracker] setMeetings =>', safe);
+  }
+
+   incrementMeeting() {
+    if (!this.userId) return;
+    this.meetings += 1;
+    console.log('[UsageTracker] incrementMeeting =>', this.meetings);
+  }
+  
+  private handleAppStateChange = (nextState: AppStateStatus) => {
+    if (this.currentAppState === 'active' && nextState.match(/inactive|background/)) {
+      this.pauseActiveTime();
+    } else if (
+      (this.currentAppState === 'background' || this.currentAppState === 'inactive') &&
+      nextState === 'active'
+    ) {
+      this.resumeActiveTime();
+    }
+
+    this.currentAppState = nextState;
+  };
+
+  private resumeActiveTime() {
+    if (!this.userId) return;
+    this.lastResumeMs = Date.now();
+  }
+
+  private pauseActiveTime() {
+    if (!this.userId) return;
+    if (!this.lastResumeMs) return;
+
+    const now = Date.now();
+    const diff = now - this.lastResumeMs;
+    if (diff > 0) {
+      this.accumulatedActiveMs += diff;
+    }
+    this.lastResumeMs = null;
+  }
+
+// 🔹 minutos totais (AGORA ARREDONDADOS)
+private getTotalActiveMinutes(): number {
+  let totalMs = this.accumulatedActiveMs;
+
+  if (this.lastResumeMs) {
+    totalMs += Date.now() - this.lastResumeMs;
+  }
+
+  const totalMinutesFloat = totalMs / (1000 * 60); // minutos com casas decimais
+  const totalMinutes = Math.round(totalMinutesFloat); // 👈 arredonda pro inteiro mais próximo
+
+  console.log('[UsageTracker] totalMinutes (rounded):', totalMinutes);
+  return totalMinutes; // ex: 0, 1, 2, 5, 10...
+}
+
+// 🔹 horas para Python (continua em decimal)
+private getTotalActiveHours(): number {
+  const minutes = this.getTotalActiveMinutes();
+  const hours = minutes / 60;
+  return Number(hours.toFixed(2)); // ex: 0.02, 1.50, 3.00
+}
+
+
+  // 👉 Python continua usando HORAS
   buildPayload(): UsagePayload | null {
-    if (!this.userId || !this.sessionStart) return null;
+    if (!this.userId || !this.sessionStartMs) {
+      console.log('[UsageTracker] buildPayload sem sessão ativa');
+      return null;
+    }
 
-    const workHours = this.computeWorkHours();
+    const workHours = this.getTotalActiveHours();
     const today = new Date();
-    const logDate = today.toISOString().split('T')[0]; // "YYYY-MM-DD"
+    const logDate = today.toISOString().split('T')[0];
 
-    return {
+    const payload: UsagePayload = {
       idUser: this.userId,
       workHours,
       meetings: this.meetings,
@@ -79,27 +155,40 @@ class UsageTracker {
       doubleClicks: this.doubleClicks,
       logDate,
     };
+
+    console.log('[UsageTracker] buildPayload =>', payload);
+    return payload;
   }
 
-  // 👉 Dados específicos para API C# (GsDailyLogs)
-  buildDailyLogForCSharp():
-    | { idUser: number; workHoursExtra: number; meetings: number }
-    | null {
-    if (!this.userId || !this.sessionStart) return null;
 
-    const totalHours = this.computeWorkHours();
-    const workHoursExtra = totalHours > 8 ? Number((totalHours - 8).toFixed(2)) : 0;
-
-    return {
-      idUser: this.userId,
-      workHoursExtra,
-      meetings: this.meetings,
-    };
+ // 👉 C# agora recebe MINUTOS INTEIROS
+buildDailyLogForCSharp():
+  | { idUser: number; workMinutes: number; meetings: number }
+  | null {
+  if (!this.userId || !this.sessionStartMs) {
+    console.log('[UsageTracker] buildDailyLogForCSharp sem sessão ativa');
+    return null;
   }
+
+  const totalMinutes = this.getTotalActiveMinutes(); // já arredondado
+
+  const payload = {
+    idUser: this.userId,
+    workMinutes: totalMinutes,  // 👈 inteiro
+    meetings: this.meetings,
+  };
+
+  console.log('[UsageTracker] buildDailyLogForCSharp =>', payload);
+  return payload;
+}
+
 
   reset() {
+    console.log('[UsageTracker] RESET');
     this.userId = null;
-    this.sessionStart = null;
+    this.sessionStartMs = null;
+    this.lastResumeMs = null;
+    this.accumulatedActiveMs = 0;
     this.clicks = 0;
     this.doubleClicks = 0;
     this.meetings = 0;

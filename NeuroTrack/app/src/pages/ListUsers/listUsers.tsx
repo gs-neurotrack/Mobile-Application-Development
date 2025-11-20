@@ -12,6 +12,7 @@ import styles from './style';
 import { fetchUsersPage, User } from '../../services/authService';
 import { ROUTES } from '../../navigation/routes';
 import Hotbar from '../../components/HotBar/hotbar';
+import GlobalTouchTracker from '../../components/GlobalTouchTracker/globalTouchTracker';
 
 const PAGE_SIZE = 5; // 👈 pode ser 1, 5, 10... mas bate com "itens"
 
@@ -81,13 +82,16 @@ const AdminUsersScreen = () => {
     return 'Cargo não informado';
   };
 
-  const handleOpenUserDetails = (user: User) => {
-    // FUTURA TELA de detalhes -> por enquanto você está mandando pro MENU
-    router.push({
-      pathname: ROUTES.MENU,
-      params: { userId: String(user.id) },
-    });
-  };
+const handleOpenUserDetails = (user: User) => {
+  router.push({
+    pathname: ROUTES.SCORES_ADMIN, // rota da tela de previsão do gestor
+    params: {
+      userId: String(user.id),
+      userName: user.name,
+    },
+  });
+};
+
 
   if (loadingInitial) {
     return (
@@ -99,6 +103,7 @@ const AdminUsersScreen = () => {
   }
 
   return (
+    <GlobalTouchTracker>
     <View style={styles.container}>
       {/* HEADER SIMPLES */}
       <View style={styles.header}>
@@ -142,6 +147,7 @@ const AdminUsersScreen = () => {
             <Hotbar/>
 
     </View>
+    </GlobalTouchTracker>
   );
 };
 

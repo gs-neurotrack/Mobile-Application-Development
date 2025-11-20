@@ -1,12 +1,19 @@
 // src/screens/Menu/MenuScreen.tsx
-import React, { useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, Image, Alert, ActivityIndicator } from 'react-native';
+import React, { useState,useEffect} from 'react';
+import { View, Text, Modal, TouchableOpacity, Image, TextInput, ActivityIndicator, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import styles from './style';
 import MenuButton from '../../components/MenuButton/menubutton';
 import { ROUTES } from '../../navigation/routes';
 import InputField from '../../components/InputField/InputField';
 import { endWorkdayFlow } from '../../services/endWorkdayFlow';
+import { usageTracker } from '../../services/usageTracker';
+import GlobalTouchTracker from '../../components/GlobalTouchTracker/globalTouchTracker';
+import { sendUsageToPythonNow } from "../../services/sendUsageFlow";
+import { endSessionAndSendData } from "../../services/sessionEndFlow";
+
+
+
 
 
 const ADMIN_PASSWORD = 'admin123'; // senha mockada
@@ -17,7 +24,44 @@ const MenuScreen = () => {
   const [adminModalVisible, setAdminModalVisible] = useState(false);
   const [adminPassword, setAdminPassword] = useState('');
   const [adminError, setAdminError] = useState('');
+  
+  const [meetingsCount, setMeetingsCount] = useState(0);
 
+    useEffect(() => {
+    const current = usageTracker.getMeetings();
+    setMeetingsCount(current);
+  }, []);
+
+  const handleChangeMeetings = (text: string) => {
+    const num = parseInt(text, 10);
+    if (isNaN(num)) {
+      setMeetingsCount(0);
+      usageTracker.setMeetings(0);
+    } else {
+      setMeetingsCount(num);
+      usageTracker.setMeetings(num);
+    }
+  };
+  const handleMinus = () => {
+    const newVal = Math.max(0, meetingsCount - 1);
+    setMeetingsCount(newVal);
+    usageTracker.setMeetings(newVal);
+  };
+
+  const handlePlus = () => {
+    const newVal = meetingsCount + 1;
+    setMeetingsCount(newVal);
+    usageTracker.setMeetings(newVal);
+  };
+
+const handleTestSend = async () => {
+  try {
+    const result = await sendUsageToPythonNow();
+    console.log("RESULTADO PYTHON:", result);
+  } catch (e) {
+    console.log("Erro ao enviar:", e);
+  }
+};
   const handleOpenAdminModal = () => {
     setAdminPassword('');
     setAdminError('');
@@ -35,6 +79,15 @@ const MenuScreen = () => {
     }
   };
 
+  const handleLogout = async () => {
+  try {
+    await endSessionAndSendData();
+    router.replace(ROUTES.LOGIN);
+  } catch (err) {
+    Alert.alert("Erro", "Falha ao encerrar sessão.");
+  }
+};
+
   const handleCloseModal = () => {
     setAdminModalVisible(false);
     setAdminPassword('');
@@ -42,32 +95,23 @@ const MenuScreen = () => {
   };
   const [ending, setEnding] = useState(false);
 
-  const handleEndWorkday = async () => {
-    if (ending) return;
+const handleEndWorkday = async () => {
+  if (ending) return;
 
-    Alert.alert(
-      'Encerrar expediente',
-      'Você deseja encerrar seu expediente e enviar os dados de uso?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Confirmar',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              setEnding(true);
-              await endWorkdayFlow();
-            } finally {
-              setEnding(false);
-            }
-          },
-        },
-      ]
-    );
-  };
+  setEnding(true);
+  try {
+    await endWorkdayFlow(); // ou endWorkdayFlow() se estiver usando router global
+  } catch (e) {
+    console.log(e);
+  } finally {
+    setEnding(false);   // 🔴 ISSO EVITA FICAR CARREGANDO PRA SEMPRE
+  }
+};
 
   return (
+  <GlobalTouchTracker>
     <View style={styles.container}>
+      
       {/* HEADER */}
       <View style={styles.header}>
             <Image
@@ -88,7 +132,7 @@ const MenuScreen = () => {
         <MenuButton
           icon="eye-outline"
           label="Ver Dados"
-          onPress={() => alert('Ver dados')}
+          onPress={() => router.push(ROUTES.SCORES)}
         />
 
         <MenuButton
@@ -104,7 +148,8 @@ const MenuScreen = () => {
         />
          <TouchableOpacity
         style={styles.buttonExit}
-        onPress={handleEndWorkday}
+        // onPress={handleEndWorkday}
+        onPress={handleLogout}
         disabled={ending}
       >
         {ending ? (
@@ -113,7 +158,35 @@ const MenuScreen = () => {
           <Text style={styles.buttonTextExit}>Encerrar expediente</Text>
         )}
       </TouchableOpacity>
+      {/* CARD DAS REUNIÕES */}
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>Reuniões realizadas hoje</Text>
+
+        <View style={styles.meetingsRow}>
+          <TouchableOpacity style={styles.meetingsButton} onPress={handleMinus}>
+            <Text style={styles.meetingsButtonText}>-</Text>
+          </TouchableOpacity>
+
+          <TextInput
+            style={styles.meetingsInput}
+            keyboardType="numeric"
+            value={String(meetingsCount)}
+            onChangeText={handleChangeMeetings}
+          />
+
+          <TouchableOpacity style={styles.meetingsButton} onPress={handlePlus}>
+            <Text style={styles.meetingsButtonText}>+</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Text style={styles.meetingsHint}>
+          Informe quantas reuniões você participou neste expediente.
+        </Text>
       </View>
+
+      {/* ... resto do seu layout ... */}
+      </View>
+
 
       {/* MODAL DE SENHA ADMIN */}
       <Modal
@@ -162,7 +235,9 @@ const MenuScreen = () => {
           </View>
         </View>
       </Modal>
+      
     </View>
+    </GlobalTouchTracker>
   );
 };
 

@@ -306,6 +306,62 @@ Qualquer outro ambiente invalida a coleta.
 
 ---
 
+# 🔑 Logins de Teste (para Professores & Avaliadores)
+
+Para facilitar a avaliação do projeto, disponibilizamos diversos usuários já cadastrados no sistema, incluindo colaboradores e coordenadores.
+
+### 👨‍💼 Coordenador (acesso ao botão “Buscar Usuário”)
+
+Para acessar o modo administrador e visualizar os dados de outros colaboradores:
+
+```
+Senha do botão “Buscar Usuário”: admin123
+```
+
+---
+
+# 👥 Credenciais para Teste
+
+Você pode usar qualquer um dos usuários abaixo para testar login, geração de score, previsões e visualização no dashboard:
+
+| Nome                  | Email                             | Senha        |
+| --------------------- | --------------------------------- | ------------ |
+| Luana Carolina        | `luana.carolina@gmail.com`        | `luana123`   |
+| Gabriel Bortoletto    | `gabriel.bortoletto@gmai.com`     | `gabi123`    |
+| Max Verstapen         | `max.verstapen@gmai.com`          | `max123`     |
+| Pedro Souza           | `pedro.souza669@gmail.com`        | `pedrosouza` |
+| Francisco Albuquerque | `francisco.albuquerque@gmail.com` | `francisco`  |
+| Gustavo Pereira       | `gustavo.pereira@gmail.com`       | `gustavo`    |
+| Maria Lopes           | `maria.lopes@gmail.com`           | `maria123`   |
+| Júlia Vasconcellos    | `julia.vasconcellos@gmail.com`    | `julia123`   |
+| Gabriela Perlin       | `gabriela.perlin@gmail.com`       | `gabi123`    |
+| Sérgio Alcantra       | `sergio.alcantra@gmail.com`       | `sergio123`  |
+
+🚨 TAMBÉM É POSSÍVEL CRIAR UM NOVO USÁRIO NA TELA DE CADASTRO, OS USUÁRIO ACIMA ESTÃO COM DADOS, FORAM DISPONIBILIZADOS PARA FACILITAR
+
+---
+
+# 🧭 Sobre o botão “Buscar Usuário” (Modo Coordenador)
+
+Essa funcionalidade permite acessar a visualização administrativa do sistema **ScoresAdmin**, onde o coordenador pode:
+
+* Ver histórico de estresse de qualquer colaborador
+* Ver previsões futuras (IA)
+* Comparar evolução dos scores
+* Identificar colaboradores em risco
+
+🔐 **Esse menu só é liberado quando a senha `admin123` é informada.**
+
+Ele **não depende do login**, ou seja:
+
+* O coordenador loga normalmente como qualquer usuário
+* Ao clicar em “Buscar Usuário”, ele informa a senha
+* Se estiver correta, abre a tela com **todos os colaboradores**
+* Ele seleciona um usuário para ver detalhes avançados
+
+
+---
+
 
 # 🚀 Endpoints Principais
 

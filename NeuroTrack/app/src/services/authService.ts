@@ -3,9 +3,6 @@ import { usageTracker } from '../services/usageTracker';
 
 export const API_URL = 'http://163.176.216.51:8080';
 
-// --------------------
-// Tipos
-// --------------------
 
 export type LoginResponseRaw = {
   token?: string;
@@ -32,7 +29,7 @@ export type User = {
   id: number;
   name: string;
   email: string;
-  password: string;   // 👈 volta a ser obrigatória, backend exige not-null
+  password: string;   
   status: string;
 
   roleId?: number;
@@ -59,9 +56,7 @@ export type Page<T> = {
   last: boolean;
 };
 
-// --------------------
-// LOGIN
-// --------------------
+
 
 export async function loginApi(email: string, password: string) {
   console.log('[LOGIN] POST', `${API_URL}/auth/login`);
@@ -106,9 +101,7 @@ export async function loginApi(email: string, password: string) {
   return data;
 }
 
-// --------------------
-// Helpers de sessão
-// --------------------
+
 
 export async function getToken() {
   return AsyncStorage.getItem('accessToken');
@@ -147,9 +140,7 @@ export async function getAuthHeaders(extra?: Record<string, string>) {
   };
 }
 
-// --------------------
-// REGISTER
-// --------------------
+
 
 type RegisterRequest = {
   name: string;
@@ -185,9 +176,7 @@ export async function registerApi(payload: RegisterRequest) {
   }
 }
 
-// --------------------
-// GET USER BY ID
-// --------------------
+
 
 export async function getUserById(id?: number): Promise<User> {
   const loggedId = id ?? (await getLoggedUserId());
@@ -216,9 +205,7 @@ export async function getUserById(id?: number): Promise<User> {
   return JSON.parse(text) as User;
 }
 
-// --------------------
-// UPDATE USER (reenviando password atual)
-// --------------------
+
 
 export async function updateUserById(user: User): Promise<User> {
   if (user.id == null) {
@@ -227,7 +214,6 @@ export async function updateUserById(user: User): Promise<User> {
 
   const headers = await getAuthHeaders();
 
-  // 👇 Envia o objeto inteiro, incluindo o password que já veio do backend (hash)
   const response = await fetch(
     `${API_URL}/api/v1/user/${user.id}`,
     {
@@ -247,9 +233,7 @@ export async function updateUserById(user: User): Promise<User> {
   return JSON.parse(text) as User;
 }
 
-// --------------------
-// DELETE USER
-// --------------------
+
 
 export async function deleteUserById(id?: number): Promise<void> {
   const loggedId = id ?? (await getLoggedUserId());
@@ -276,9 +260,7 @@ export async function deleteUserById(id?: number): Promise<void> {
   }
 }
 
-// --------------------
-// LISTA PAGINADA
-// --------------------
+
 
 export async function fetchUsersPage(
   page: number = 0,

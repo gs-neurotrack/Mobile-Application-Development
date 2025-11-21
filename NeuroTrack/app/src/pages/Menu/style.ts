@@ -25,6 +25,16 @@ export default StyleSheet.create({
     height: 220,
   },
 
+gridScroll: {
+  paddingHorizontal: 16,
+  paddingBottom: 32,
+  gap: 16,
+  flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+
+},
+
 
   grid: {
     flexDirection: 'row',

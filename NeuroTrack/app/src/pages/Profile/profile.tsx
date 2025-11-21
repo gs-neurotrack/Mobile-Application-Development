@@ -1,11 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity,Image,  ScrollView,ActivityIndicator,Alert,Modal,FlatList,} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+  Alert,
+  Modal,
+  FlatList,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import styles from './style';
 import InputField from '../../components/InputField/InputField';
 import { ROUTES } from '../../navigation/routes';
 
-import {getUserById,updateUserById,deleteUserById,getLoggedUserId,logout,User} from '../../services/authService';
+import {
+  getUserById,
+  updateUserById,
+  deleteUserById,
+  getLoggedUserId,
+  logout,
+  User,
+} from '../../services/authService';
 
 import { fetchLimits, GsLimit } from '../../services/limitsService';
 
@@ -28,7 +45,6 @@ const ProfileScreen = () => {
   const [user, setUser] = useState<User | null>(null);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [status, setStatus] = useState('A');
 
   const [roleId, setRoleId] = useState<number | null>(null);
@@ -52,7 +68,9 @@ const ProfileScreen = () => {
       ? limitOptions.find((l) => l.id === limitsId)?.label ?? 'Limite não informado'
       : 'Selecione seu limite';
 
-
+  // ==========================
+  // CARREGA DADOS DO USUÁRIO
+  // ==========================
   useEffect(() => {
     const loadUser = async () => {
       try {
@@ -73,7 +91,6 @@ const ProfileScreen = () => {
         setUser(data);
         setName(data.name);
         setEmail(data.email);
-        setPassword(''); 
         setStatus(data.status || 'A');
 
         const roleFromApi = data.roleId ?? data.role?.id ?? null;
@@ -92,7 +109,9 @@ const ProfileScreen = () => {
     loadUser();
   }, [router]);
 
-
+  // ==========================
+  // CARREGA LIMITES (horas / reuniões)
+  // ==========================
   useEffect(() => {
     const loadLimits = async () => {
       try {
@@ -119,30 +138,40 @@ const ProfileScreen = () => {
     loadLimits();
   }, []);
 
-
+  // ==========================
+  // SALVAR (NOME, EMAIL, LIMITE / REUNIÕES)
+  // ==========================
   const handleSave = async () => {
-  if (!user) return;
+    if (!user) return;
 
-  const updated: User = {
-    ...user,
-    name,
-    email,
-    status: 'A',
-    roleId: roleId ?? user.role?.id,
-    limitsId: limitsId ?? user.limits?.id,
+    try {
+      setSaving(true);
+      setMessage('');
+
+      const updated: User = {
+        ...user,
+        name,
+        email,
+        status: 'A',
+        roleId: roleId ?? user.role?.id,
+        limitsId: limitsId ?? user.limits?.id,
+      };
+
+      const saved = await updateUserById(updated);
+      setUser(saved);
+      setMessage('Dados atualizados com sucesso!');
+    } catch (err: any) {
+      console.log('Erro ao salvar usuário:', err);
+      setMessage(err.message || 'Erro ao salvar alterações.');
+      Alert.alert('Erro', err.message || 'Erro ao salvar alterações.');
+    } finally {
+      setSaving(false);
+    }
   };
 
-
-  // if (password && password.trim().length > 0) {
-  //   updated.password = password; 
-  // }
-
-  const saved = await updateUserById(updated); 
-  setUser(saved);
-  setMessage('Dados atualizados com sucesso!');
-};
-
-
+  // ==========================
+  // EXCLUIR CONTA
+  // ==========================
   const handleDelete = () => {
     Alert.alert('Excluir conta', 'Tem certeza que deseja excluir sua conta?', [
       { text: 'Cancelar', style: 'cancel' },
@@ -168,7 +197,9 @@ const ProfileScreen = () => {
     ]);
   };
 
-
+  // ==========================
+  // ESTADOS DE CARREGAMENTO
+  // ==========================
   if (loading) {
     return (
       <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
@@ -186,6 +217,9 @@ const ProfileScreen = () => {
     );
   }
 
+  // ==========================
+  // RENDER
+  // ==========================
   return (
     <GlobalTouchTracker>
       <View style={styles.container}>
@@ -220,23 +254,14 @@ const ProfileScreen = () => {
             keyboardType="email-address"
           />
 
-          <InputField
-            placeholder="Senha"
-            value={password}
-            onChangeText={(t) => {
-              setPassword(t);
-              if (message) setMessage('');
-            }}
-            secureTextEntry
-            keyboardType="default"
-          />
+          {/* Sem campo de senha agora */}
 
           <Text style={styles.titleDate}>Cargo</Text>
           <View style={[styles.selectButton, { backgroundColor: '#f3f4f6' }]}>
             <Text style={{ color: '#555' }}>{cargoLabel}</Text>
           </View>
 
-          <Text style={styles.titleDate}>Limite</Text>
+          <Text style={styles.titleDate}>Limite (horas / reuniões)</Text>
           <TouchableOpacity
             style={styles.selectButton}
             onPress={() => {
@@ -268,7 +293,7 @@ const ProfileScreen = () => {
           </TouchableOpacity>
         </ScrollView>
 
-    
+        {/* MODAL DE LIMITES */}
         <Modal
           visible={limitModalVisible}
           transparent

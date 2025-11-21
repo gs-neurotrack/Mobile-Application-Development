@@ -8,6 +8,7 @@ import { ROUTES } from '../../navigation/routes';
 import { fetchScoresForLoggedUser, UserScore } from '../../services/scoresService';
 import { logout } from '../../services/authService';
 import Hotbar from '../../components/HotBar/hotbar';
+import GlobalTouchTracker from '../../components/GlobalTouchTracker/globalTouchTracker';
 
 const screenWidth = Dimensions.get('window').width - 32;
 
@@ -151,6 +152,7 @@ const ScoresScreen = () => {
   }
 
   return (
+      <GlobalTouchTracker>
     <View style={styles.container}>
   
       <View style={styles.header}>
@@ -318,6 +320,7 @@ const ScoresScreen = () => {
       </ScrollView>
       <Hotbar />
     </View>
+    </GlobalTouchTracker>
   );
 };
 

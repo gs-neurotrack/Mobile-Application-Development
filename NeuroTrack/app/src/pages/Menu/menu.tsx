@@ -8,7 +8,7 @@ import InputField from '../../components/InputField/InputField';
 import { endWorkdayFlow } from '../../services/endWorkdayFlow';
 import { usageTracker } from '../../services/usageTracker';
 import GlobalTouchTracker from '../../components/GlobalTouchTracker/globalTouchTracker';
-import { sendUsageToPythonNow } from "../../services/sendUsageFlow";
+
 import { endSessionAndSendData } from "../../services/sessionEndFlow";
 
 
@@ -53,14 +53,7 @@ const MenuScreen = () => {
     usageTracker.setMeetings(newVal);
   };
 
-const handleTestSend = async () => {
-  try {
-    const result = await sendUsageToPythonNow();
-    console.log("RESULTADO PYTHON:", result);
-  } catch (e) {
-    console.log("Erro ao enviar:", e);
-  }
-};
+
   const handleOpenAdminModal = () => {
     setAdminPassword('');
     setAdminError('');
@@ -94,18 +87,18 @@ const handleTestSend = async () => {
   };
   const [ending, setEnding] = useState(false);
 
-const handleEndWorkday = async () => {
-  if (ending) return;
+// const handleEndWorkday = async () => {
+//   if (ending) return;
 
-  setEnding(true);
-  try {
-    await endWorkdayFlow(); 
-  } catch (e) {
-    console.log(e);
-  } finally {
-    setEnding(false);   
-  }
-};
+//   setEnding(true);
+//   try {
+//     await endWorkdayFlow(); 
+//   } catch (e) {
+//     console.log(e);
+//   } finally {
+//     setEnding(false);   
+//   }
+// };
 
   return (
   <GlobalTouchTracker>
@@ -141,10 +134,11 @@ const handleEndWorkday = async () => {
         />
 
         <MenuButton
-          icon="add-circle-outline"
-          label="Adicionar"
+          icon="information-circle-outline"
+          label="Sobre"
           onPress={() => router.push(ROUTES.ABOUT)}
         />
+
          <TouchableOpacity
         style={styles.buttonExit}
       

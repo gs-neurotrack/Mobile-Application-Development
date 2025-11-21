@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import {View, Text, ActivityIndicator, FlatList,  TouchableOpacity,  RefreshControl, } from 'react-native';
+import {View, Text, ActivityIndicator, FlatList,  TouchableOpacity,  RefreshControl,Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import styles from './style';
 import { fetchUsersPage, User } from '../../services/authService';
@@ -107,8 +107,14 @@ const AdminUsersScreen = () => {
       <View style={styles.container}>
         
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>Usuários cadastrados (ID ≥ 31)</Text>
-        </View>
+        <Image
+          source={require('../../img/logo_neuro_track_branca.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+        <Text style={styles.headerTitle}>Meu histórico de estresse</Text>
+      </View>
+
 
         {message ? <Text style={styles.errorText}>{message}</Text> : null}
 

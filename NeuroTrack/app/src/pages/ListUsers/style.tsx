@@ -8,18 +8,24 @@ const styles = StyleSheet.create({
 
  
   header: {
-    paddingHorizontal: 20,
-    paddingVertical: 18,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e5e5',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
     backgroundColor: '#80c6ac',
+    borderRadius: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: '700',
     color: '#FFFFFF',
   },
-
+  logo: {
+    width: 40,
+    height: 40,
+    marginRight: 8,
+  },
   
   errorText: {
     color: '#E53935',

@@ -1,12 +1,11 @@
 import React from 'react';
 import { View, Text, Image, ScrollView } from 'react-native';
-import { useRouter } from 'expo-router';
 import styles from './style';
 import Hotbar from '../../components/HotBar/hotbar';
 import GlobalTouchTracker from '../../components/GlobalTouchTracker/globalTouchTracker';
 
 const AboutNeuroTrackScreen = () => {
-  const router = useRouter();
+
 
   return (
     <GlobalTouchTracker>

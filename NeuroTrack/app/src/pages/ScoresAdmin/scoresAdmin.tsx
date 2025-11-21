@@ -1,13 +1,6 @@
 // src/screens/Scores/ScoresAdminScreen.tsx
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  ActivityIndicator,
-  Dimensions,
-} from 'react-native';
+import { View, Text, Image, ScrollView, ActivityIndicator, Dimensions,} from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { LineChart } from 'react-native-chart-kit';
 
@@ -25,7 +18,7 @@ const screenWidth = Dimensions.get('window').width - 32;
 const ScoresAdminScreen = () => {
   const router = useRouter();
 
-  // 🔹 pega userId e userName passados pela ListUsers
+ 
   const params = useLocalSearchParams<{
     userId?: string;
     userName?: string;
@@ -106,12 +99,12 @@ const ScoresAdminScreen = () => {
     datasets: [
       {
         data: values,
-        color: (opacity = 1) => `rgba(96, 165, 250, ${opacity})`, // azul
+        color: (opacity = 1) => `rgba(96, 165, 250, ${opacity})`, 
         strokeWidth: 2,
       },
       {
         data: values.map(() => average),
-        color: () => `rgba(239, 68, 68, 1)`, // vermelho
+        color: () => `rgba(239, 68, 68, 1)`, 
         strokeWidth: 2,
         withDots: false,
       },
@@ -186,7 +179,7 @@ const ScoresAdminScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* HEADER */}
+    
       <View style={styles.header}>
         <Image
           source={require('../../img/logo_neuro_track_branca.png')}
@@ -214,7 +207,7 @@ const ScoresAdminScreen = () => {
 
         {predictions.length > 0 && (
           <>
-            {/* CARD – ÚLTIMA PREDIÇÃO */}
+           
             {lastPrediction && (
               <View className="card" style={styles.card}>
                 <Text style={styles.cardTitle}>Última previsão gerada</Text>
@@ -254,7 +247,7 @@ const ScoresAdminScreen = () => {
               </View>
             )}
 
-            {/* CARD – MAIOR RISCO PREVISTO */}
+           
             {highestPrediction && (
               <View style={styles.card}>
                 <Text style={styles.cardTitle}>Maior risco previsto</Text>
@@ -294,7 +287,7 @@ const ScoresAdminScreen = () => {
               </View>
             )}
 
-            {/* LEGENDA / INTERPRETAÇÃO */}
+        
             <View
               style={{
                 backgroundColor: '#0f172a',
@@ -345,7 +338,7 @@ const ScoresAdminScreen = () => {
               </View>
             </View>
 
-            {/* GRÁFICO DE LINHA – PREDIÇÕES */}
+         
             <View style={styles.chartCard}>
               <Text style={styles.chartTitle}>
                 Evolução das previsões de estresse

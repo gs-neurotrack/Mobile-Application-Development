@@ -6,9 +6,7 @@ import { usageTracker } from '../services/usageTracker';
 export const API_URL = 'http://163.176.216.51:8080';
 
 
-// ======================
-// TIPOS
-// ======================
+
 
 export type LoginResponseRaw = {
   token?: string;
@@ -38,15 +36,15 @@ export type User = {
   password: string;
   status: string;
 
-  // usado em /auth/register ou em update de perfil
+ 
   roleId?: number;
   limitsId?: number;
 
-  // usado na listagem paginada /api/v1/user
+  
   role?: Role;
   limits?: Limits;
 
-  // extras do Spring Security
+ 
   credentialsNonExpired?: boolean;
   authorities?: { authority: string }[];
   accountNonExpired?: boolean;
@@ -59,15 +57,13 @@ export type Page<T> = {
   content: T[];
   totalElements: number;
   totalPages: number;
-  number: number;     // página atual (do backend)
-  size: number;       // tamanho da página
+  number: number;    
+  size: number;       
   first: boolean;
   last: boolean;
 };
 
-// ======================
-// LOGIN
-// ======================
+
 export async function loginApi(email: string, password: string) {
   console.log('[LOGIN] POST', `${API_URL}/auth/login`);
 
@@ -86,7 +82,7 @@ export async function loginApi(email: string, password: string) {
     throw new Error('Email ou senha inválidos.');
   }
 
-  // A API agora devolve token + id
+ 
   const data = JSON.parse(text);
 
   const token =
@@ -96,13 +92,11 @@ export async function loginApi(email: string, password: string) {
     throw new Error('Token não encontrado na resposta da API.');
   }
 
-  // SALVA TOKEN
+ 
   await AsyncStorage.setItem('accessToken', token);
 
-  // SALVA EMAIL
   await AsyncStorage.setItem('userEmail', email);
 
-  // SALVA ID DO USUÁRIO
   if (data.id) {
     await AsyncStorage.setItem('userId', String(data.id));
     usageTracker.startSession(data.id);
@@ -118,9 +112,6 @@ export async function loginApi(email: string, password: string) {
 
 
 
-// ======================
-// TOKEN, EMAIL, USER ID, LOGOUT & HEADERS
-// ======================
 
 export async function getToken() {
   return AsyncStorage.getItem('accessToken');
@@ -156,15 +147,13 @@ export async function getAuthHeaders(extra?: Record<string, string>) {
   };
 }
 
-// ======================
-// REGISTER
-// ======================
+
 
 type RegisterRequest = {
   name: string;
   email: string;
   password: string;
-  status: string;  // 'A'
+  status: string;  
   roleId: number;
   limitsId: number;
 };
@@ -194,11 +183,9 @@ export async function registerApi(payload: RegisterRequest) {
   }
 }
 
-// ======================
-// USER POR ID (GET / PUT / DELETE) – PERFIL
-// ======================
 
-// GET /api/v1/user/{id}
+
+
 export async function getUserById(id?: number): Promise<User> {
   const loggedId = id ?? (await getLoggedUserId());
 
@@ -226,7 +213,7 @@ export async function getUserById(id?: number): Promise<User> {
   return JSON.parse(text) as User;
 }
 
-// PUT /api/v1/user/{id}
+
 export async function updateUserById(user: User): Promise<User> {
   if (user.id == null) {
     throw new Error('ID do usuário não informado para atualização.');
@@ -253,7 +240,7 @@ export async function updateUserById(user: User): Promise<User> {
   return JSON.parse(text) as User;
 }
 
-// DELETE /api/v1/user/{id}
+
 export async function deleteUserById(id?: number): Promise<void> {
   
   const loggedId = id ?? (await getLoggedUserId());
@@ -281,9 +268,7 @@ export async function deleteUserById(id?: number): Promise<void> {
 }
 
 
-// ======================
-// LISTAR USUÁRIOS PAGINADO – /api/v1/user?page=&size=
-// ======================
+
 
 export async function fetchUsersPage(
   page: number = 0,      

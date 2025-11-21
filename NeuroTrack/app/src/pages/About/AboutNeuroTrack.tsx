@@ -1,4 +1,3 @@
-// src/screens/About/AboutNeuroTrackScreen.tsx
 import React from 'react';
 import { View, Text, Image, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -12,7 +11,7 @@ const AboutNeuroTrackScreen = () => {
   return (
     <GlobalTouchTracker>
       <View style={styles.container}>
-        {/* HEADER */}
+        
         <View style={styles.header}>
           <Image
             source={require('../../img/logo_neuro_track_branca.png')}
@@ -31,7 +30,7 @@ const AboutNeuroTrackScreen = () => {
           style={{ width: '100%' }}
           contentContainerStyle={styles.scrollContent}
         >
-          {/* BLOCO: VISÃO GERAL */}
+         
           <View style={styles.card}>
             <Text style={styles.cardTitle}>O que é o NeuroTrack?</Text>
             <Text style={styles.cardText}>
@@ -44,7 +43,7 @@ const AboutNeuroTrackScreen = () => {
             </Text>
           </View>
 
-          {/* BLOCO: COMO FUNCIONA */}
+       
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Como funciona na prática?</Text>
             <Text style={styles.cardText}>
@@ -64,7 +63,7 @@ const AboutNeuroTrackScreen = () => {
             </Text>
           </View>
 
-          {/* BLOCO: PARA QUEM É */}
+      
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Para quem é o sistema?</Text>
             <Text style={styles.cardText}>
@@ -79,7 +78,7 @@ const AboutNeuroTrackScreen = () => {
             </Text>
           </View>
 
-          {/* BLOCO: PRINCIPAIS TELAS */}
+         
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Principais recursos</Text>
             <Text style={styles.bullet}>
@@ -99,7 +98,7 @@ const AboutNeuroTrackScreen = () => {
             </Text>
           </View>
 
-          {/* BLOCO: PROPÓSITO */}
+        
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Qual é o objetivo?</Text>
             <Text style={styles.cardText}>
@@ -112,7 +111,7 @@ const AboutNeuroTrackScreen = () => {
             </Text>
           </View>
 
-          {/* BLOCO: AVISO */}
+         
           <View style={styles.cardInfo}>
             <Text style={styles.cardInfoTitle}>Importante</Text>
             <Text style={styles.cardInfoText}>

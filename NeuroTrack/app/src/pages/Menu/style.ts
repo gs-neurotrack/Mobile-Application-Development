@@ -25,7 +25,7 @@ export default StyleSheet.create({
     height: 220,
   },
 
-  // GRID
+
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -103,7 +103,6 @@ export default StyleSheet.create({
     color: '#fff',
     textAlign: 'center',
   },  
-  // no seu style.ts do Menu, adicione:
 card: {
   width: '100%',
   backgroundColor: '#ffffff',

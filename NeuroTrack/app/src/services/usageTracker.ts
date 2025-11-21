@@ -3,11 +3,11 @@ import { AppState, AppStateStatus } from 'react-native';
 
 export type UsagePayload = {
   idUser: number;
-  workHours: number;     // horas (para Python)
+  workHours: number;     
   meetings: number;
   clicks: number;
   doubleClicks: number;
-  logDate: string;       // "YYYY-MM-DD"
+  logDate: string;       
 };
 
 class UsageTracker {
@@ -71,7 +71,7 @@ class UsageTracker {
 
 
     setMeetings(value: number) {
-    if (!this.userId) return; // sem sessão, ignora
+    if (!this.userId) return; 
     const safe = Number.isFinite(value) ? Math.max(0, Math.floor(value)) : 0;
     this.meetings = safe;
     console.log('[UsageTracker] setMeetings =>', safe);
@@ -113,7 +113,7 @@ class UsageTracker {
     this.lastResumeMs = null;
   }
 
-// 🔹 minutos totais (AGORA ARREDONDADOS)
+
 private getTotalActiveMinutes(): number {
   let totalMs = this.accumulatedActiveMs;
 
@@ -121,22 +121,22 @@ private getTotalActiveMinutes(): number {
     totalMs += Date.now() - this.lastResumeMs;
   }
 
-  const totalMinutesFloat = totalMs / (1000 * 60); // minutos com casas decimais
-  const totalMinutes = Math.round(totalMinutesFloat); // 👈 arredonda pro inteiro mais próximo
+  const totalMinutesFloat = totalMs / (1000 * 60); 
+  const totalMinutes = Math.round(totalMinutesFloat); 
 
   console.log('[UsageTracker] totalMinutes (rounded):', totalMinutes);
-  return totalMinutes; // ex: 0, 1, 2, 5, 10...
+  return totalMinutes; 
 }
 
-// 🔹 horas para Python (continua em decimal)
+
 private getTotalActiveHours(): number {
   const minutes = this.getTotalActiveMinutes();
   const hours = minutes / 60;
-  return Number(hours.toFixed(2)); // ex: 0.02, 1.50, 3.00
+  return Number(hours.toFixed(2)); 
 }
 
 
-  // 👉 Python continua usando HORAS
+  
   buildPayload(): UsagePayload | null {
     if (!this.userId || !this.sessionStartMs) {
       console.log('[UsageTracker] buildPayload sem sessão ativa');
@@ -161,7 +161,7 @@ private getTotalActiveHours(): number {
   }
 
 
- // 👉 C# agora recebe MINUTOS INTEIROS
+
 buildDailyLogForCSharp():
   | { idUser: number; workMinutes: number; meetings: number }
   | null {
@@ -170,11 +170,11 @@ buildDailyLogForCSharp():
     return null;
   }
 
-  const totalMinutes = this.getTotalActiveMinutes(); // já arredondado
+  const totalMinutes = this.getTotalActiveMinutes();
 
   const payload = {
     idUser: this.userId,
-    workMinutes: totalMinutes,  // 👈 inteiro
+    workMinutes: totalMinutes, 
     meetings: this.meetings,
   };
 

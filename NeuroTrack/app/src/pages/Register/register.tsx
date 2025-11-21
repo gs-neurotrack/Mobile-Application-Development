@@ -1,15 +1,5 @@
-// src/screens/Register/Register.tsx
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  Modal,
-  FlatList,
-  ActivityIndicator,
-} from 'react-native';
+import {View,Text,TouchableOpacity,  Image,  ScrollView,Modal,FlatList, ActivityIndicator} from 'react-native';
 import { useRouter } from 'expo-router';
 import styles from './style';
 import InputField from '../../components/InputField/InputField';
@@ -27,7 +17,7 @@ type LimitOption = {
   label: string;
 };
 
-// regex simples pra validar email
+
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const Register = () => {
@@ -38,7 +28,7 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
-  // erros por campo
+  
   const [nameError, setNameError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -96,7 +86,7 @@ const Register = () => {
   }, []);
 
   const handleRegister = async () => {
-    // limpa mensagens gerais e por campo
+    
     setMessage('');
     setNameError('');
     setEmailError('');
@@ -109,7 +99,7 @@ const Register = () => {
 
     let hasError = false;
 
-    // valida nome
+    
     if (!trimmedName) {
       setNameError('Informe seu nome completo.');
       hasError = true;
@@ -118,7 +108,7 @@ const Register = () => {
       hasError = true;
     }
 
-    // valida email
+    
     if (!trimmedEmail) {
       setEmailError('Informe um e-mail.');
       hasError = true;
@@ -127,7 +117,7 @@ const Register = () => {
       hasError = true;
     }
 
-    // valida senha
+
     if (!password) {
       setPasswordError('Informe uma senha.');
       hasError = true;
@@ -136,20 +126,20 @@ const Register = () => {
       hasError = true;
     }
 
-    // valida cargo
+    
     if (!selectedCargoId) {
       setCargoError('Selecione um cargo para continuar.');
       hasError = true;
     }
 
-    // valida limite
+    
     if (!selectedLimitId) {
       setLimitError('Selecione um limite de horas e reuniões.');
       hasError = true;
     }
 
     if (hasError) {
-      // não chama API se tiver erro de validação
+      
       return;
     }
 
@@ -192,7 +182,7 @@ const Register = () => {
       <ScrollView style={{ width: '100%' }}>
         <Text style={styles.titleDate}>Dados Pessoais</Text>
 
-        {/* NOME */}
+      
         <InputField
           placeholder="Digite seu nome completo"
           value={name}
@@ -207,7 +197,7 @@ const Register = () => {
           <Text style={styles.text_message}>{nameError}</Text>
         ) : null}
 
-        {/* EMAIL */}
+       
         <InputField
           placeholder="Digite seu email"
           value={email}
@@ -222,7 +212,7 @@ const Register = () => {
           <Text style={styles.text_message}>{emailError}</Text>
         ) : null}
 
-        {/* SENHA */}
+       
         <InputField
           placeholder="Digite sua senha"
           value={password}
@@ -238,7 +228,7 @@ const Register = () => {
           <Text style={styles.text_message}>{passwordError}</Text>
         ) : null}
 
-        {/* CARGO */}
+       
         <Text style={styles.titleDate}>Cargo</Text>
         <TouchableOpacity
           style={styles.selectButton}
@@ -252,7 +242,7 @@ const Register = () => {
           <Text style={styles.text_message}>{cargoError}</Text>
         ) : null}
 
-        {/* LIMITE */}
+        
         <Text style={styles.titleDate}>Limite</Text>
         <TouchableOpacity
           style={styles.selectButton}
@@ -274,10 +264,10 @@ const Register = () => {
           <Text style={styles.text_message}>{limitError}</Text>
         ) : null}
 
-        {/* MENSAGEM GERAL (erro da API / sucesso) */}
+       
         {message ? <Text style={styles.text_message}>{message}</Text> : null}
 
-        {/* BOTÃO CADASTRAR */}
+    
         <TouchableOpacity
           style={styles.button}
           onPress={handleRegister}
@@ -296,7 +286,7 @@ const Register = () => {
         </Text>
       </ScrollView>
 
-      {/* MODAL CARGO */}
+    
       <Modal
         visible={cargoModalVisible}
         transparent
@@ -334,7 +324,7 @@ const Register = () => {
         </View>
       </Modal>
 
-      {/* MODAL LIMITES */}
+   
       <Modal
         visible={limitModalVisible}
         transparent

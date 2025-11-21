@@ -1,16 +1,5 @@
-// src/screens/Profile/ProfileScreen.tsx
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  ActivityIndicator,
-  Alert,
-  Modal,
-  FlatList,
-} from 'react-native';
+import {View,Text,TouchableOpacity,Image,ScrollView,ActivityIndicator,Alert,Modal,FlatList,} from 'react-native';
 import { useRouter } from 'expo-router';
 import styles from './style';
 import InputField from '../../components/InputField/InputField';
@@ -30,7 +19,7 @@ import { fetchLimits, GsLimit } from '../../services/limitsService';
 import Hotbar from '../../components/HotBar/hotbar';
 import GlobalTouchTracker from '../../components/GlobalTouchTracker/globalTouchTracker';
 
-// 🔹 Opções mockadas de cargo (apenas para exibir label)
+
 const cargoOptions = [
   { id: 1, label: 'Coordenador', value: 'Coordenador' },
   { id: 2, label: 'Colaborador', value: 'Colaborador' },
@@ -57,24 +46,24 @@ const ProfileScreen = () => {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
 
-  // LIMITES vindos da API C#
+
   const [limitOptions, setLimitOptions] = useState<LimitOption[]>([]);
   const [loadingLimits, setLoadingLimits] = useState(false);
   const [limitModalVisible, setLimitModalVisible] = useState(false);
 
-  // label amigável pro cargo (somente leitura)
+
   const cargoLabel =
     roleId != null
       ? cargoOptions.find((c) => c.id === roleId)?.label ?? 'Cargo não informado'
       : 'Cargo não informado';
 
-  // label amigável pro limite (editável)
+
   const limitLabel =
     limitsId != null
       ? limitOptions.find((l) => l.id === limitsId)?.label ?? 'Limite não informado'
       : 'Selecione seu limite';
 
-  // --------- CARREGAR PERFIL A PARTIR DO ID SALVO ---------
+
   useEffect(() => {
     const loadUser = async () => {
       try {
@@ -114,7 +103,7 @@ const ProfileScreen = () => {
     loadUser();
   }, [router]);
 
-  // --------- CARREGAR LIMITES DA API C# ---------
+
   useEffect(() => {
     const loadLimits = async () => {
       try {
@@ -132,7 +121,7 @@ const ProfileScreen = () => {
         setLimitOptions(mapped);
       } catch (err: any) {
         console.log(err);
-        // não quebra a tela, só mostra mensagem
+     
         setMessage((prev) => prev || err.message || 'Erro ao carregar limites.');
       } finally {
         setLoadingLimits(false);
@@ -142,7 +131,7 @@ const ProfileScreen = () => {
     loadLimits();
   }, []);
 
-  // --------- SALVAR (PUT) ---------
+  
   const handleSave = async () => {
   if (!user) return;
 
@@ -155,7 +144,7 @@ const ProfileScreen = () => {
     limitsId: limitsId ?? user.limits?.id,
   };
 
-  // Só envia password se o usuário digitou alguma coisa
+
   if (password && password.trim().length > 0) {
     updated.password = password;
   }
@@ -165,7 +154,7 @@ const ProfileScreen = () => {
   setMessage('Dados atualizados com sucesso!');
 };
 
-  // --------- DELETAR (DELETE) ---------
+
   const handleDelete = () => {
     Alert.alert(
       'Excluir conta',
@@ -179,7 +168,7 @@ const ProfileScreen = () => {
             try {
               setSaving(true);
 
-              // o service pode usar o id logado internamente
+           
               await deleteUserById();
 
               await logout();
@@ -197,7 +186,6 @@ const ProfileScreen = () => {
     );
   };
 
-  // --------- ESTADOS DE CARREGAMENTO ---------
   if (loading) {
     return (
       <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
@@ -215,7 +203,7 @@ const ProfileScreen = () => {
     );
   }
 
-  // --------- TELA DE PERFIL ---------
+
   return (
     <GlobalTouchTracker>
     <View style={styles.container}>
@@ -261,13 +249,13 @@ const ProfileScreen = () => {
           keyboardType="default"
         />
 
-        {/* CARGO - SOMENTE LEITURA */}
+        
         <Text style={styles.titleDate}>Cargo</Text>
         <View style={[styles.selectButton, { backgroundColor: '#f3f4f6' }]}>
           <Text style={{ color: '#555' }}>{cargoLabel}</Text>
         </View>
 
-        {/* LIMITE - EDITÁVEL COM MODAL */}
+        
         <Text style={styles.titleDate}>Limite</Text>
         <TouchableOpacity
           style={styles.selectButton}
@@ -305,7 +293,7 @@ const ProfileScreen = () => {
         </TouchableOpacity>
       </ScrollView>
 
-      {/* MODAL DE LIMITES */}
+ 
       <Modal
         visible={limitModalVisible}
         transparent

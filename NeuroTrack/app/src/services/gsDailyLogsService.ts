@@ -1,11 +1,11 @@
-// src/services/gsDailyLogsService.ts
+
 import { usageTracker } from './usageTracker';
 
 const CSHARP_API_URL = 'http://163.176.216.51:5162';
 
 type GsDailyLogRequest = {
   idLog: number;
-  workHours: number;  // vai receber MINUTOS
+  workHours: number;  
   meetings: number;
   logDate: string;
   idUser: number;
@@ -23,7 +23,7 @@ export async function sendDailyLogToCSharp() {
 
   const payload: GsDailyLogRequest = {
     idLog: 0,
-    workHours: data.workMinutes,   // 👈 AGORA SÃO MINUTOS
+    workHours: data.workMinutes,  
     meetings: data.meetings,
     logDate: nowIso,
     idUser: data.idUser,

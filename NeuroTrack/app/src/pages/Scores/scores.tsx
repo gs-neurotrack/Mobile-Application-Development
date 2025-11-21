@@ -1,13 +1,5 @@
-// src/screens/Scores/ScoresScreen.tsx
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  ActivityIndicator,
-  Dimensions,
-} from 'react-native';
+import { View, Text, Image,ScrollView,ActivityIndicator,Dimensions} from 'react-native';
 import { useRouter } from 'expo-router';
 import { LineChart } from 'react-native-chart-kit';
 
@@ -43,7 +35,7 @@ const ScoresScreen = () => {
           return;
         }
 
-        // ordena por data_score
+        
         const ordered = [...data].sort((a, b) => {
           const da = new Date(a.dateScore ?? a.createdAt).getTime();
           const db = new Date(b.dateScore ?? b.createdAt).getTime();
@@ -72,7 +64,7 @@ const ScoresScreen = () => {
     load();
   }, [router]);
 
-  // ------- MONTA DADOS DO GRÁFICO -------
+
 
   const labels = scores.map((s) => {
     const d = new Date(s.dateScore ?? s.createdAt);
@@ -81,7 +73,7 @@ const ScoresScreen = () => {
 
   const values = scores.map((s) => s.scoreValue);
 
-  // média dos scores
+
   const average =
     values.reduce((sum, v) => sum + v, 0) / (values.length || 1);
 
@@ -89,22 +81,22 @@ const ScoresScreen = () => {
     labels,
     datasets: [
       {
-        // linha principal do score
+      
         data: values,
         color: (opacity = 1) => `rgba(128, 198, 172, ${opacity})`,
         strokeWidth: 2,
       },
       {
-        // linha horizontal da média
+       
         data: values.map(() => average),
-        color: () => `rgba(239, 68, 68, 1)`, // vermelho
+        color: () => `rgba(239, 68, 68, 1)`, 
         strokeWidth: 2,
         withDots: false,
       },
     ],
   };
 
-  // ====== INTERPRETAÇÃO DO SCORE ======
+ 
 
   const getRiskInfo = (score: number) => {
     if (score <= 20) {
@@ -135,14 +127,14 @@ const ScoresScreen = () => {
     };
   };
 
-  // pega o score mais recente para resumo (ignorando zeros, se existirem)
+
   const validScores = scores.filter(
     (s) => typeof s.scoreValue === 'number' && s.scoreValue > 0
   );
   const lastScore = validScores.length > 0 ? validScores[validScores.length - 1] : null;
   const lastScoreRisk = lastScore ? getRiskInfo(lastScore.scoreValue) : null;
 
-  // ------- ESTADOS ESPECIAIS -------
+
 
   if (loading) {
     return (
@@ -160,7 +152,7 @@ const ScoresScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* HEADER */}
+  
       <View style={styles.header}>
         <Image
           source={require('../../img/logo_neuro_track_branca.png')}
@@ -175,7 +167,7 @@ const ScoresScreen = () => {
 
         {scores.length > 0 && (
           <>
-            {/* CARD RESUMO DO ÚLTIMO SCORE */}
+
             {lastScore && (
               <View style={styles.card}>
                 <Text style={styles.cardTitle}>Último score calculado</Text>
@@ -213,7 +205,7 @@ const ScoresScreen = () => {
               </View>
             )}
 
-            {/* LEGENDA / INTERPRETAÇÃO DO SCORE */}
+          
             <View
               style={{
                 backgroundColor: '#0f172a',
@@ -238,7 +230,7 @@ const ScoresScreen = () => {
                 (0 a 100). Valores mais altos indicam maior nível de estresse.
               </Text>
 
-              {/* Faixa de cores horizontal */}
+         
               <View
                 style={{
                   flexDirection: 'row',
@@ -262,7 +254,7 @@ const ScoresScreen = () => {
               </View>
             </View>
 
-            {/* GRÁFICO DE LINHA */}
+       
             <View style={styles.chartCard}>
               <Text style={styles.chartTitle}>Evolução do score ao longo do tempo</Text>
 

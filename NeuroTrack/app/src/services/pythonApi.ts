@@ -3,7 +3,7 @@
   import { UsagePayload } from './usageTracker';
 
 
-  const PYTHON_API= 'http://163.176.216.51:8000'; // ajuste se for outra porta
+  const PYTHON_API= 'http://163.176.216.51:8000'; 
 
   export async function sendUsageToPython() {
     const payload = usageTracker.buildPayload();
@@ -16,7 +16,7 @@
     console.log('[PythonAPI] Enviando payload:', payload);
 
     const response = await fetch(`${PYTHON_API}/logs`, {
-      // coloque o path da sua rota FastAPI (ex: /mobile/logs, /usage, etc)
+      
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -31,7 +31,7 @@
       throw new Error(`Erro ao enviar dados de uso para Python: ${response.status} - ${text}`);
     }
 
-    // se deu tudo certo, podemos resetar a sessão
+
     usageTracker.reset();
   }
 

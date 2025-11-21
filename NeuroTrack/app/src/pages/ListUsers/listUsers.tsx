@@ -1,13 +1,5 @@
-// src/screens/AdminUsers/AdminUsersScreen.tsx (ou caminho equivalente)
 import React, { useEffect, useState, useCallback } from 'react';
-import {
-  View,
-  Text,
-  ActivityIndicator,
-  FlatList,
-  TouchableOpacity,
-  RefreshControl,
-} from 'react-native';
+import {View, Text, ActivityIndicator, FlatList,  TouchableOpacity,  RefreshControl, } from 'react-native';
 import { useRouter } from 'expo-router';
 import styles from './style';
 import { fetchUsersPage, User } from '../../services/authService';
@@ -15,20 +7,20 @@ import { ROUTES } from '../../navigation/routes';
 import Hotbar from '../../components/HotBar/hotbar';
 import GlobalTouchTracker from '../../components/GlobalTouchTracker/globalTouchTracker';
 
-const UI_PAGE_SIZE = 5; // 👈 5 usuários por página na interface
+const UI_PAGE_SIZE = 5; 
 
 const AdminUsersScreen = () => {
   const router = useRouter();
 
-  const [allUsers, setAllUsers] = useState<User[]>([]); // todos filtrados (id >= 31)
-  const [currentPage, setCurrentPage] = useState(1);    // página da UI (1,2,3...)
+  const [allUsers, setAllUsers] = useState<User[]>([]); 
+  const [currentPage, setCurrentPage] = useState(1);    
   const [totalPages, setTotalPages] = useState(1);
 
   const [loadingInitial, setLoadingInitial] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [message, setMessage] = useState('');
 
-  // 🔹 Carrega TODAS as páginas do backend, filtra id >= 31 e pagina na UI
+ 
   const loadAllUsers = useCallback(async () => {
     try {
       setMessage('');
@@ -38,15 +30,14 @@ const AdminUsersScreen = () => {
       let pageBackend = 0;
       let lastBackendPage = false;
 
-      // busca todas as páginas do backend
       while (!lastBackendPage) {
-        const data = await fetchUsersPage(pageBackend, 20); // 20 por página no backend (pode ajustar)
+        const data = await fetchUsersPage(pageBackend, 20); 
         accumulated = [...accumulated, ...data.content];
         lastBackendPage = data.last;
         pageBackend += 1;
       }
 
-      // 🔹 FILTRA SOMENTE usuários com ID >= 31
+      
       const filtered = accumulated.filter((u) => u.id >= 31);
 
       if (filtered.length === 0) {
@@ -57,7 +48,7 @@ const AdminUsersScreen = () => {
 
       const pages = Math.max(1, Math.ceil(filtered.length / UI_PAGE_SIZE));
       setTotalPages(pages);
-      setCurrentPage(1); // sempre volta para a primeira página
+      setCurrentPage(1); 
     } catch (err: any) {
       console.log(err);
       setMessage(err.message || 'Erro ao carregar usuários.');
@@ -67,7 +58,7 @@ const AdminUsersScreen = () => {
     }
   }, []);
 
-  // Carregamento inicial
+
   useEffect(() => {
     loadAllUsers();
   }, [loadAllUsers]);
@@ -84,7 +75,7 @@ const AdminUsersScreen = () => {
 
   const handleOpenUserDetails = (user: User) => {
     router.push({
-      pathname: ROUTES.SCORES_ADMIN, // rota da tela de previsão do gestor
+      pathname: ROUTES.SCORES_ADMIN, 
       params: {
         userId: String(user.id),
         userName: user.name,
@@ -92,7 +83,7 @@ const AdminUsersScreen = () => {
     });
   };
 
-  // 🔹 Fatia os usuários da página atual (UI_PAGE_SIZE = 5)
+
   const startIndex = (currentPage - 1) * UI_PAGE_SIZE;
   const endIndex = startIndex + UI_PAGE_SIZE;
   const usersPage = allUsers.slice(startIndex, endIndex);
@@ -114,7 +105,7 @@ const AdminUsersScreen = () => {
   return (
     <GlobalTouchTracker>
       <View style={styles.container}>
-        {/* HEADER SIMPLES */}
+        
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Usuários cadastrados (ID ≥ 31)</Text>
         </View>
@@ -145,7 +136,7 @@ const AdminUsersScreen = () => {
               )}
             />
 
-            {/* 🔹 Paginação da UI */}
+          
             <View style={styles.paginationContainer}>
               <TouchableOpacity
                 style={[

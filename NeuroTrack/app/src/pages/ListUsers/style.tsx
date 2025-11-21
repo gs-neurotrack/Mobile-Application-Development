@@ -6,13 +6,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
 
-  // 🔹 Header
+ 
   header: {
     paddingHorizontal: 20,
     paddingVertical: 18,
     borderBottomWidth: 1,
     borderBottomColor: '#e5e5e5',
-    backgroundColor: '#80c6ac', // cor combinando com seus botões
+    backgroundColor: '#80c6ac',
   },
   headerTitle: {
     fontSize: 20,
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
 
-  // 🔹 Mensagem de erro
+  
   errorText: {
     color: '#E53935',
     marginTop: 8,
@@ -28,13 +28,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 
-  // 🔹 Lista
+  
   listContent: {
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
 
-  // 🔹 Card de usuário
+
   userCard: {
     backgroundColor: '#f5f5f5',
     borderRadius: 12,
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     color: '#555',
   },
 
-  // 🔹 Lista vazia
+ 
   emptyContainer: {
     flex: 1,
     alignItems: 'center',

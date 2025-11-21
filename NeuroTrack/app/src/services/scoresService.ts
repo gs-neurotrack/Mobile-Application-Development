@@ -14,7 +14,7 @@ export interface UserScore {
   idLog?: number | null;
 }
 
-// esse é o formato que a API está devolvendo
+
 type ScoresSearchApiResponse = {
   items: {
     data: {
@@ -86,7 +86,7 @@ export async function fetchScoresForLoggedUser(): Promise<UserScore[]> {
     return [];
   }
 
-  // 🔥 AQUI a gente "achata" o data para virar o formato que a tela espera
+
   const mapped: UserScore[] = json.items.map((item) => {
     const d = item.data;
 

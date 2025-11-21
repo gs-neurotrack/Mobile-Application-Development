@@ -14,13 +14,13 @@ export async function endSessionAndSendData() {
       return;
     }
 
-    // 1) Envia para Python
+
     await sendToPython(payload);
 
-    // 2) Envia para C# (MINUTOS, via service que já funcionava)
+   
     await sendDailyLogToCSharp();
 
-    // 3) Reseta e faz logout
+    
     usageTracker.reset();
     await logout();
 

@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Modal,
-  TextInput,
-  Pressable,
-} from 'react-native';
+import {View,Text, TouchableOpacity,  Modal,  TextInput,Pressable,} from 'react-native';
 import { useRouter, usePathname } from 'expo-router';
 
 const ADMIN_PASSWORD = 'admin123'; 
@@ -42,7 +35,7 @@ const Hotbar = () => {
       return;
     }
 
-    // Para USERS, abre modal pedindo senha
+  
     if (tab.key === 'USERS') {
       setAdminPassword('');
       setAdminError('');
@@ -66,7 +59,7 @@ const Hotbar = () => {
 
   return (
     <>
-      {/* BOTTOM BAR */}
+    
       <View
         style={{
           flexDirection: 'row',
@@ -102,7 +95,7 @@ const Hotbar = () => {
         ))}
       </View>
 
-      {/* MODAL DE SENHA ADMIN PARA ABA "USUÁRIOS" */}
+   
       <Modal
         visible={adminModalVisible}
         transparent

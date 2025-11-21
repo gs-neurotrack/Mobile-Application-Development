@@ -13,7 +13,7 @@ export interface Prediction {
   idStatusRisk: number;
 }
 
-// formato da API
+
 type PredictionsSearchApiResponse = {
   items: {
     data: {
@@ -36,7 +36,7 @@ type PredictionsSearchApiResponse = {
   _links: any[];
 };
 
-// 🔹 usado pelo gestor para ver QUALQUER usuário
+
 export async function fetchPredictionsForUser(idUser: number): Promise<Prediction[]> {
   if (!idUser || Number.isNaN(idUser)) {
     throw new Error('ID do usuário inválido para buscar predições.');
@@ -100,7 +100,7 @@ export async function fetchPredictionsForUser(idUser: number): Promise<Predictio
   return mapped;
 }
 
-// 🔹 se um dia você quiser a visão “minhas predições” (para o próprio colaborador)
+
 export async function fetchPredictionsForLoggedUser(): Promise<Prediction[]> {
   const idUser = await getLoggedUserId();
   if (!idUser) {

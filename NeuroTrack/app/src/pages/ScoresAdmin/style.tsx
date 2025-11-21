@@ -1,10 +1,10 @@
-// src/screens/Scores/style.ts
+
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffffff', // fundo dark NeuroTrack
+    backgroundColor: '#ffffffff', 
     paddingHorizontal: 16,
     paddingTop: 16,
   },
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
 
-  // SCROLL
+
   scrollContent: {
     paddingBottom: 24,
   },
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
 
-  // CARD GENÉRICO (último score / previsões / maior risco)
+  
   card: {
     backgroundColor: '#0b1120',
     borderRadius: 16,
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
 
-  // CARD DO GRÁFICO
+
   chartCard: {
     backgroundColor: '#ffffff',
     borderRadius: 16,

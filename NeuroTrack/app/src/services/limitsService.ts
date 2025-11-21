@@ -1,14 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export const LIMITS_API_URL = 'http://163.176.216.51:5162';
 
-// tipo simplificado que vamos usar no app
+
 export type GsLimit = {
   id: number;
   limitHours: number;
   limitMeetings: number;
 };
 
-// tipo do JSON bruto da API
+
 type GsLimitsResponse = {
   items: {
     data: {
@@ -29,7 +29,7 @@ type GsLimitsResponse = {
 };
 
 
-// busca todos os limites
+
 export async function fetchLimits(): Promise<GsLimit[]> {
   const url = `${LIMITS_API_URL}/api/GsLimits`;
 
@@ -65,7 +65,7 @@ export async function fetchLimits(): Promise<GsLimit[]> {
         label: `${h} hora${h > 1 ? 's' : ''} | ${m} reunião${m > 1 ? 'es' : ''}`,
       };
     })
-    .filter((limit: GsLimit) => limit.id >= 21); // mantém apenas os válidos
+    .filter((limit: GsLimit) => limit.id >= 21);
 
   return limits;
 }

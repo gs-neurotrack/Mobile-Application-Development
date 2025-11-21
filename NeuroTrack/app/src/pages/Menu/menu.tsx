@@ -1,4 +1,3 @@
-// src/screens/Menu/MenuScreen.tsx
 import React, { useState,useEffect} from 'react';
 import { View, Text, Modal, TouchableOpacity, Image, TextInput, ActivityIndicator, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -16,7 +15,7 @@ import { endSessionAndSendData } from "../../services/sessionEndFlow";
 
 
 
-const ADMIN_PASSWORD = 'admin123'; // senha mockada
+const ADMIN_PASSWORD = 'admin123'; 
 
 const MenuScreen = () => {
   const router = useRouter();
@@ -72,7 +71,7 @@ const handleTestSend = async () => {
     if (adminPassword === ADMIN_PASSWORD) {
       setAdminModalVisible(false);
       setAdminError('');
-      // ajuste aqui para a rota correta da sua tela de admin
+      
       router.push(ROUTES.LIST_USER); 
     } else {
       setAdminError('Senha inválida. Tente novamente.');
@@ -100,11 +99,11 @@ const handleEndWorkday = async () => {
 
   setEnding(true);
   try {
-    await endWorkdayFlow(); // ou endWorkdayFlow() se estiver usando router global
+    await endWorkdayFlow(); 
   } catch (e) {
     console.log(e);
   } finally {
-    setEnding(false);   // 🔴 ISSO EVITA FICAR CARREGANDO PRA SEMPRE
+    setEnding(false);   
   }
 };
 
@@ -112,7 +111,7 @@ const handleEndWorkday = async () => {
   <GlobalTouchTracker>
     <View style={styles.container}>
       
-      {/* HEADER */}
+  
       <View style={styles.header}>
             <Image
             source={require('../../img/logo_neuro_track_branca.png')}
@@ -121,7 +120,7 @@ const handleEndWorkday = async () => {
         />
       </View>
 
-      {/* GRID DE BOTÕES */}
+      
       <View style={styles.grid}>
         <MenuButton
           icon="person-circle-outline"
@@ -148,7 +147,7 @@ const handleEndWorkday = async () => {
         />
          <TouchableOpacity
         style={styles.buttonExit}
-        // onPress={handleEndWorkday}
+      
         onPress={handleLogout}
         disabled={ending}
       >
@@ -158,7 +157,7 @@ const handleEndWorkday = async () => {
           <Text style={styles.buttonTextExit}>Encerrar expediente</Text>
         )}
       </TouchableOpacity>
-      {/* CARD DAS REUNIÕES */}
+    
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Reuniões realizadas hoje</Text>
 
@@ -184,11 +183,11 @@ const handleEndWorkday = async () => {
         </Text>
       </View>
 
-      {/* ... resto do seu layout ... */}
+    
       </View>
 
 
-      {/* MODAL DE SENHA ADMIN */}
+  
       <Modal
         visible={adminModalVisible}
         transparent

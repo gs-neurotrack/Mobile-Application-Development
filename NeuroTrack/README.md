@@ -451,3 +451,9 @@ O **NeuroTrack** é uma solução completa para monitoramento e prevenção de e
 
 É um dos projetos mais completos possíveis dentro da FIAP Global Solution.
 
+
+| Nome                                  | Função no Projeto          | LinkedIn | GitHub |
+|---------------------------------------|----------------------------|----------|--------|
+| Cleyton Enrike de Oliveira            | Desenvolvedor .NET & IOT   | LinkedIn | @Cleytonrik99 |
+| Matheus Henrique Nascimento de Freitas| Desenvolvedor Mobile & DBA | LinkedIn | @MatheusHenriqueNF |
+| Pedro Henrique Sena                   | Desenvolvedor Java & DevOps| LinkedIn | @devpedrosena1 |

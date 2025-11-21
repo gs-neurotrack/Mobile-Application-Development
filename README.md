@@ -25,7 +25,7 @@
 13. [Autenticação & Segurança](#-autenticação--segurança)
 14. [Predição com IA](#-predição-com-ia-python)
 15. [Docker & Deploy](#-docker--deploy)
-16. [Futuras Implementações](#-futuras-implementações)
+
 
 ---
 

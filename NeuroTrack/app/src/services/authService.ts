@@ -1,11 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import { usageTracker } from '../services/usageTracker';
 
-
 export const API_URL = 'http://163.176.216.51:8080';
-
-
 
 
 export type LoginResponseRaw = {
@@ -36,15 +32,12 @@ export type User = {
   password: string;
   status: string;
 
- 
   roleId?: number;
   limitsId?: number;
 
-  
   role?: Role;
   limits?: Limits;
 
- 
   credentialsNonExpired?: boolean;
   authorities?: { authority: string }[];
   accountNonExpired?: boolean;
@@ -57,8 +50,8 @@ export type Page<T> = {
   content: T[];
   totalElements: number;
   totalPages: number;
-  number: number;    
-  size: number;       
+  number: number;
+  size: number;
   first: boolean;
   last: boolean;
 };
@@ -76,13 +69,12 @@ export async function loginApi(email: string, password: string) {
   });
 
   const text = await response.text();
-  console.log('[LOGIN] status:','body:', text);
+  console.log('[LOGIN] status:', response.status, 'body:', text);
 
   if (!response.ok) {
     throw new Error('Email ou senha inválidos.');
   }
 
- 
   const data = JSON.parse(text);
 
   const token =
@@ -92,24 +84,21 @@ export async function loginApi(email: string, password: string) {
     throw new Error('Token não encontrado na resposta da API.');
   }
 
- 
   await AsyncStorage.setItem('accessToken', token);
-
   await AsyncStorage.setItem('userEmail', email);
 
   if (data.id) {
     await AsyncStorage.setItem('userId', String(data.id));
     usageTracker.startSession(data.id);
-    console.log(' ID SALVO:', data.id);
+    console.log('[LOGIN] ID SALVO:', data.id);
   } else {
-    console.log(' API não enviou ID!');
+    console.log('[LOGIN] API não enviou ID!');
   }
 
-  console.log('TOKEN SALVO:', token.slice(0, 15) + '...');
+  console.log('[LOGIN] TOKEN SALVO:', token.slice(0, 15) + '...');
 
   return data;
 }
-
 
 
 
@@ -134,11 +123,14 @@ export async function getAuthHeaders(extra?: Record<string, string>) {
   const token = await getToken();
 
   if (!token) {
-    console.log(' [AUTH] Token não encontrado no AsyncStorage');
+    console.log('[AUTH] Token não encontrado no AsyncStorage');
     throw new Error('Usuário não autenticado (token não encontrado).');
   }
 
-  console.log(' [AUTH] Usando token (primeiros 20 chars):', token.slice(0, 20) + '...');
+  console.log(
+    '[AUTH] Usando token (primeiros 20 chars):',
+    token.slice(0, 20) + '...',
+  );
 
   return {
     'Content-Type': 'application/json',
@@ -148,12 +140,11 @@ export async function getAuthHeaders(extra?: Record<string, string>) {
 }
 
 
-
 type RegisterRequest = {
   name: string;
   email: string;
   password: string;
-  status: string;  
+  status: string;
   roleId: number;
   limitsId: number;
 };
@@ -170,7 +161,7 @@ export async function registerApi(payload: RegisterRequest) {
   });
 
   const text = await response.text();
-  console.log(' [REGISTER] status', response.status, 'body:', text);
+  console.log('[REGISTER] status', response.status, 'body:', text);
 
   if (!response.ok) {
     throw new Error(`Erro ao cadastrar usuário. Status: ${response.status} - ${text}`);
@@ -179,11 +170,9 @@ export async function registerApi(payload: RegisterRequest) {
   try {
     return JSON.parse(text);
   } catch {
-    return null; 
+    return null;
   }
 }
-
-
 
 
 export async function getUserById(id?: number): Promise<User> {
@@ -214,6 +203,7 @@ export async function getUserById(id?: number): Promise<User> {
 }
 
 
+
 export async function updateUserById(user: User): Promise<User> {
   if (user.id == null) {
     throw new Error('ID do usuário não informado para atualização.');
@@ -221,12 +211,14 @@ export async function updateUserById(user: User): Promise<User> {
 
   const headers = await getAuthHeaders();
 
+  const { password, ...userWithoutPassword } = user;
+
   const response = await fetch(
     `${API_URL}/api/v1/user/${user.id}`,
     {
       method: 'PUT',
       headers,
-      body: JSON.stringify(user),
+      body: JSON.stringify(userWithoutPassword),
     }
   );
 
@@ -241,8 +233,8 @@ export async function updateUserById(user: User): Promise<User> {
 }
 
 
+
 export async function deleteUserById(id?: number): Promise<void> {
-  
   const loggedId = id ?? (await getLoggedUserId());
 
   if (!loggedId) {
@@ -260,7 +252,7 @@ export async function deleteUserById(id?: number): Promise<void> {
   });
 
   const text = await response.text();
-  console.log(' [DELETE USER BY ID] status', response.status, 'body:', text);
+  console.log('[DELETE USER BY ID] status', response.status, 'body:', text);
 
   if (!response.ok) {
     throw new Error(`Erro ao excluir usuário. Status: ${response.status} - ${text}`);
@@ -268,10 +260,8 @@ export async function deleteUserById(id?: number): Promise<void> {
 }
 
 
-
-
 export async function fetchUsersPage(
-  page: number = 0,      
+  page: number = 0,
   size: number = 5
 ): Promise<Page<User>> {
   const headers = await getAuthHeaders();
@@ -287,7 +277,7 @@ export async function fetchUsersPage(
 
   const text = await response.text();
   console.log('[GET USERS PAGE] status', response.status, 'body:', text);
- 
+
   if (!response.ok) {
     throw new Error(`Erro ao buscar usuários. Status: ${response.status} - ${text}`);
   }

@@ -1,28 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import {View,Text,TouchableOpacity,Image,ScrollView,ActivityIndicator,Alert,Modal,FlatList,} from 'react-native';
+import { View, Text, TouchableOpacity,Image,  ScrollView,ActivityIndicator,Alert,Modal,FlatList,} from 'react-native';
 import { useRouter } from 'expo-router';
 import styles from './style';
 import InputField from '../../components/InputField/InputField';
 import { ROUTES } from '../../navigation/routes';
 
-import {
-  getUserById,
-  updateUserById,
-  deleteUserById,
-  getLoggedUserId,
-  logout,
-  User,
-} from '../../services/authService';
+import {getUserById,updateUserById,deleteUserById,getLoggedUserId,logout,User} from '../../services/authService';
 
 import { fetchLimits, GsLimit } from '../../services/limitsService';
 
 import Hotbar from '../../components/HotBar/hotbar';
 import GlobalTouchTracker from '../../components/GlobalTouchTracker/globalTouchTracker';
 
-
 const cargoOptions = [
-  { id: 1, label: 'Coordenador', value: 'Coordenador' },
-  { id: 2, label: 'Colaborador', value: 'Colaborador' },
+  { id: 7, label: 'Coordenador', value: 'Coordenador' },
+  { id: 41, label: 'Colaborador', value: 'Colaborador' },
 ];
 
 type LimitOption = {
@@ -46,17 +38,14 @@ const ProfileScreen = () => {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
 
-
   const [limitOptions, setLimitOptions] = useState<LimitOption[]>([]);
   const [loadingLimits, setLoadingLimits] = useState(false);
   const [limitModalVisible, setLimitModalVisible] = useState(false);
-
 
   const cargoLabel =
     roleId != null
       ? cargoOptions.find((c) => c.id === roleId)?.label ?? 'Cargo não informado'
       : 'Cargo não informado';
-
 
   const limitLabel =
     limitsId != null
@@ -84,7 +73,7 @@ const ProfileScreen = () => {
         setUser(data);
         setName(data.name);
         setEmail(data.email);
-        setPassword('');
+        setPassword(''); 
         setStatus(data.status || 'A');
 
         const roleFromApi = data.roleId ?? data.role?.id ?? null;
@@ -121,7 +110,6 @@ const ProfileScreen = () => {
         setLimitOptions(mapped);
       } catch (err: any) {
         console.log(err);
-     
         setMessage((prev) => prev || err.message || 'Erro ao carregar limites.');
       } finally {
         setLoadingLimits(false);
@@ -131,7 +119,7 @@ const ProfileScreen = () => {
     loadLimits();
   }, []);
 
-  
+
   const handleSave = async () => {
   if (!user) return;
 
@@ -145,46 +133,41 @@ const ProfileScreen = () => {
   };
 
 
-  if (password && password.trim().length > 0) {
-    updated.password = password;
-  }
+  // if (password && password.trim().length > 0) {
+  //   updated.password = password; 
+  // }
 
-  const saved = await updateUserById(updated);
+  const saved = await updateUserById(updated); 
   setUser(saved);
   setMessage('Dados atualizados com sucesso!');
 };
 
 
   const handleDelete = () => {
-    Alert.alert(
-      'Excluir conta',
-      'Tem certeza que deseja excluir sua conta?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Excluir',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              setSaving(true);
+    Alert.alert('Excluir conta', 'Tem certeza que deseja excluir sua conta?', [
+      { text: 'Cancelar', style: 'cancel' },
+      {
+        text: 'Excluir',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            setSaving(true);
 
-           
-              await deleteUserById();
-
-              await logout();
-              Alert.alert('Conta removida', 'Sua conta foi excluída.');
-              router.replace(ROUTES.LOGIN);
-            } catch (err: any) {
-              console.log(' Erro ao excluir usuário:', err);
-              Alert.alert('Erro', err.message || 'Erro ao excluir conta.');
-            } finally {
-              setSaving(false);
-            }
-          },
+            await deleteUserById();
+            await logout();
+            Alert.alert('Conta removida', 'Sua conta foi excluída.');
+            router.replace(ROUTES.LOGIN);
+          } catch (err: any) {
+            console.log('Erro ao excluir usuário:', err);
+            Alert.alert('Erro', err.message || 'Erro ao excluir conta.');
+          } finally {
+            setSaving(false);
+          }
         },
-      ]
-    );
+      },
+    ]);
   };
+
 
   if (loading) {
     return (
@@ -203,135 +186,127 @@ const ProfileScreen = () => {
     );
   }
 
-
   return (
     <GlobalTouchTracker>
-    <View style={styles.container}>
-      <Image
-        source={require('../../img/logo_neuro_track.png')}
-        style={styles.logo}
-        resizeMode="contain"
-      />
-
-      <Text style={styles.title}>Meu Perfil</Text>
-
-      <ScrollView style={{ width: '100%' }}>
-        <Text style={styles.titleDate}>Dados Pessoais</Text>
-
-        <InputField
-          placeholder="Nome completo"
-          value={name}
-          keyboardType="default"
-          onChangeText={(t) => {
-            setName(t);
-            if (message) setMessage('');
-          }}
+      <View style={styles.container}>
+        <Image
+          source={require('../../img/logo_neuro_track.png')}
+          style={styles.logo}
+          resizeMode="contain"
         />
 
-        <InputField
-          placeholder="Email"
-          value={email}
-          onChangeText={(t) => {
-            setEmail(t);
-            if (message) setMessage('');
-          }}
-          keyboardType="email-address"
-        />
+        <Text style={styles.title}>Meu Perfil</Text>
 
-        <InputField
-          placeholder="Senha"
-          value={password}
-          onChangeText={(t) => {
-            setPassword(t);
-            if (message) setMessage('');
-          }}
-          secureTextEntry
-          keyboardType="default"
-        />
+        <ScrollView style={{ width: '100%' }}>
+          <Text style={styles.titleDate}>Dados Pessoais</Text>
 
-        
-        <Text style={styles.titleDate}>Cargo</Text>
-        <View style={[styles.selectButton, { backgroundColor: '#f3f4f6' }]}>
-          <Text style={{ color: '#555' }}>{cargoLabel}</Text>
-        </View>
+          <InputField
+            placeholder="Nome completo"
+            value={name}
+            keyboardType="default"
+            onChangeText={(t) => {
+              setName(t);
+              if (message) setMessage('');
+            }}
+          />
 
-        
-        <Text style={styles.titleDate}>Limite</Text>
-        <TouchableOpacity
-          style={styles.selectButton}
-          onPress={() => {
-            if (!loadingLimits && limitOptions.length > 0) {
-              setLimitModalVisible(true);
-            }
-          }}
-        >
-          {loadingLimits ? (
-            <ActivityIndicator />
-          ) : (
-            <Text style={{ color: limitsId ? '#000' : '#999' }}>{limitLabel}</Text>
-          )}
-        </TouchableOpacity>
+          <InputField
+            placeholder="Email"
+            value={email}
+            onChangeText={(t) => {
+              setEmail(t);
+              if (message) setMessage('');
+            }}
+            keyboardType="email-address"
+          />
 
-        {message ? <Text style={styles.text_message}>{message}</Text> : null}
+          <InputField
+            placeholder="Senha"
+            value={password}
+            onChangeText={(t) => {
+              setPassword(t);
+              if (message) setMessage('');
+            }}
+            secureTextEntry
+            keyboardType="default"
+          />
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleSave}
-          disabled={saving}
-        >
-          <Text style={styles.buttonText}>
-            {saving ? 'Salvando...' : 'Salvar alterações'}
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: '#E53935', marginTop: 10 }]}
-          onPress={handleDelete}
-          disabled={saving}
-        >
-          <Text style={styles.buttonText}>Excluir conta</Text>
-        </TouchableOpacity>
-      </ScrollView>
-
- 
-      <Modal
-        visible={limitModalVisible}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setLimitModalVisible(false)}
-      >
-        <View style={styles.bgModal}>
-          <View style={styles.optionsSelect}>
-            <Text style={styles.titleOptions}>{limitLabel}</Text>
-
-            <FlatList
-              data={limitOptions}
-              keyExtractor={(item) => String(item.id)}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={styles.flatListItem}
-                  onPress={() => {
-                    setLimitsId(item.id);
-                    setLimitModalVisible(false);
-                  }}
-                >
-                  <Text style={{ fontSize: 16 }}>{item.label}</Text>
-                </TouchableOpacity>
-              )}
-            />
-
-            <TouchableOpacity
-              onPress={() => setLimitModalVisible(false)}
-              style={styles.buttonCancel}
-            >
-              <Text style={styles.textCancel}>Cancelar</Text>
-            </TouchableOpacity>
+          <Text style={styles.titleDate}>Cargo</Text>
+          <View style={[styles.selectButton, { backgroundColor: '#f3f4f6' }]}>
+            <Text style={{ color: '#555' }}>{cargoLabel}</Text>
           </View>
-        </View>
-      </Modal>
-            <Hotbar />
 
-    </View>
+          <Text style={styles.titleDate}>Limite</Text>
+          <TouchableOpacity
+            style={styles.selectButton}
+            onPress={() => {
+              if (!loadingLimits && limitOptions.length > 0) {
+                setLimitModalVisible(true);
+              }
+            }}
+            disabled={loadingLimits}
+          >
+            {loadingLimits ? (
+              <ActivityIndicator />
+            ) : (
+              <Text style={{ color: limitsId ? '#000' : '#999' }}>{limitLabel}</Text>
+            )}
+          </TouchableOpacity>
+
+          {message ? <Text style={styles.text_message}>{message}</Text> : null}
+
+          <TouchableOpacity style={styles.button} onPress={handleSave} disabled={saving}>
+            <Text style={styles.buttonText}>{saving ? 'Salvando...' : 'Salvar alterações'}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: '#E53935', marginTop: 10 }]}
+            onPress={handleDelete}
+            disabled={saving}
+          >
+            <Text style={styles.buttonText}>Excluir conta</Text>
+          </TouchableOpacity>
+        </ScrollView>
+
+    
+        <Modal
+          visible={limitModalVisible}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setLimitModalVisible(false)}
+        >
+          <View style={styles.bgModal}>
+            <View style={styles.optionsSelect}>
+              <Text style={styles.titleOptions}>{limitLabel}</Text>
+
+              <FlatList
+                data={limitOptions}
+                keyExtractor={(item) => String(item.id)}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={styles.flatListItem}
+                    onPress={() => {
+                      setLimitsId(item.id);
+                      setLimitModalVisible(false);
+                    }}
+                  >
+                    <Text style={{ fontSize: 16 }}>{item.label}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+
+              <TouchableOpacity
+                onPress={() => setLimitModalVisible(false)}
+                style={styles.buttonCancel}
+              >
+                <Text style={styles.textCancel}>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
+        <Hotbar />
+      </View>
     </GlobalTouchTracker>
   );
 };

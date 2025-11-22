@@ -506,6 +506,10 @@ O **NeuroTrack** é uma solução completa para monitoramento e prevenção de e
 
 É um dos projetos mais completos possíveis dentro da FIAP Global Solution.
 
+---
+# VÍDEO
+https://youtu.be/EZ--itltm7A
+---
 
 | Nome                                  | Função no Projeto          | LinkedIn | GitHub |
 |---------------------------------------|----------------------------|----------|--------|

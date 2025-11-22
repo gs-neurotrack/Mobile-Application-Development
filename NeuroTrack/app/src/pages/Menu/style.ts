@@ -6,7 +6,6 @@ export default StyleSheet.create({
     backgroundColor: '#ffffff',
   },
 
-
   header: {
     backgroundColor: '#80c6ac',
     paddingVertical: 25,
@@ -15,34 +14,102 @@ export default StyleSheet.create({
     borderBottomRightRadius: 18,
     marginBottom: 25,
   },
-  headerTitle: {
-    color: '#fff',
-    fontSize: 26,
-    fontWeight: '700',
-  },
   logo: {
     width: 330,
     height: 220,
   },
 
-gridScroll: {
-  paddingHorizontal: 16,
-  paddingBottom: 32,
-  gap: 16,
-  flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
 
-},
+  gridScroll: {
+    paddingHorizontal: 16,
+    paddingBottom: 32,
+  },
 
-
-  grid: {
+  menuGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
+    marginBottom: 16,
   },
 
+
+  menuItem: {
+    width: '48%',
+    marginBottom: 16,
+  },
+
+
+  buttonExit: {
+    backgroundColor: '#80c6ac',
+    borderRadius: 16,
+    paddingVertical: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonTextExit: {
+    fontSize: 14,
+    marginTop: 8,
+    fontWeight: '600',
+    color: '#fff',
+    textAlign: 'center',
+  },
+
+
+  card: {
+    width: '100%',
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    padding: 16,
+    marginTop: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#111827',
+    marginBottom: 12,
+  },
+
+  meetingsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  meetingsButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#80c6ac',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  meetingsButtonText: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: '700',
+  },
+  meetingsInput: {
+    flex: 1,
+    marginHorizontal: 12,
+    borderWidth: 1,
+    borderColor: '#d1d5db',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    textAlign: 'center',
+    color: '#111827',
+  },
+  meetingsHint: {
+    marginTop: 8,
+    fontSize: 12,
+    color: '#6b7280',
+  },
+
+  
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.4)',
@@ -96,80 +163,4 @@ gridScroll: {
     color: '#fff',
     fontWeight: '700',
   },
-  buttonExit:{
-
-    backgroundColor: '#80c6ac',
-    borderRadius: 16,
-    paddingVertical: 20,
-    width: '48%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 15,
-  },
-  buttonTextExit: {
-    fontSize: 14,
-    marginTop: 8,
-    fontWeight: '600',
-    color: '#fff',
-    textAlign: 'center',
-  },  
-card: {
-  width: '100%',
-  backgroundColor: '#ffffff',
-  borderRadius: 12,
-  padding: 16,
-  marginTop: 16,
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.1,
-  shadowRadius: 4,
-  elevation: 2,
-},
-
-cardTitle: {
-  fontSize: 16,
-  fontWeight: '600',
-  color: '#111827',
-  marginBottom: 12,
-},
-
-meetingsRow: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-},
-
-meetingsButton: {
-  width: 40,
-  height: 40,
-  borderRadius: 20,
-  backgroundColor: '#80c6ac',
-  alignItems: 'center',
-  justifyContent: 'center',
-},
-
-meetingsButtonText: {
-  color: '#fff',
-  fontSize: 20,
-  fontWeight: '700',
-},
-
-meetingsInput: {
-  flex: 1,
-  marginHorizontal: 12,
-  borderWidth: 1,
-  borderColor: '#d1d5db',
-  borderRadius: 8,
-  paddingHorizontal: 10,
-  paddingVertical: 6,
-  textAlign: 'center',
-  color: '#111827',
-},
-
-meetingsHint: {
-  marginTop: 8,
-  fontSize: 12,
-  color: '#6b7280',
-},
-
 });

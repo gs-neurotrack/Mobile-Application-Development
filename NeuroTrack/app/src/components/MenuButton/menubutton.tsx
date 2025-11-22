@@ -1,26 +1,20 @@
 import React from 'react';
 import { TouchableOpacity, Text, View } from 'react-native';
-import styles from './style';
 import { Ionicons } from '@expo/vector-icons';
-import GlobalTouchTracker from '../GlobalTouchTracker/globalTouchTracker';
+import styles from './style';
 
-interface MenuButtonProps {
-  icon: keyof typeof Ionicons.glyphMap;
+type MenuButtonProps = {
+  icon: string;
   label: string;
   onPress: () => void;
-}
-
-const MenuButton = ({ icon, label, onPress }: MenuButtonProps) => {
-  return (
-    
-    <TouchableOpacity style={styles.card} onPress={onPress}>
-      <GlobalTouchTracker></GlobalTouchTracker>
-        <Ionicons name={icon} size={38} color="#fff" />
-        <Text style={styles.label}>{label}</Text>
-      
-    </TouchableOpacity>
-    
-  );
+  style?: any;
 };
 
-export default MenuButton;
+export default function MenuButton({ icon, label, onPress, style }: MenuButtonProps) {
+  return (
+    <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
+      <Ionicons name={icon as any} size={40} color="#ffffffff" />
+      <Text style={styles.label}>{label}</Text>
+    </TouchableOpacity>
+  );
+}

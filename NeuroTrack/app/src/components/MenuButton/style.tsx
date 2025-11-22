@@ -1,22 +1,26 @@
 import { StyleSheet } from 'react-native';
 
-const styles =StyleSheet.create({
-   card: {
+export default StyleSheet.create({
+  button: {
     backgroundColor: '#80c6ac',
     borderRadius: 16,
     paddingVertical: 20,
-    width: '48%',
-    justifyContent: 'center',
+    paddingHorizontal: 10,
     alignItems: 'center',
-    marginBottom: 15,
+    justifyContent: 'center',
+    width: '100%', 
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 2,
   },
+
   label: {
-    fontSize: 14,
     marginTop: 8,
+    fontSize: 14,
     fontWeight: '600',
-    color: '#fff',
+    color: '#ffffffff',
     textAlign: 'center',
   },
 });
-
-export default styles;

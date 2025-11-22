@@ -189,8 +189,9 @@ const ScoresAdminScreen = () => {
         <View>
           <Text style={styles.headerTitle}>Visão preditiva (Gestor)</Text>
           {selectedUserName ? (
-            <Text style={{ color: '#9ca3af', fontSize: 12 }}>
-              Colaborador: {selectedUserName} (ID: {selectedUserId || '--'})
+            <Text style={{ color: '#ffffffff', fontSize: 12 }}>
+              Colaborador: {selectedUserName}
+               {/* (ID: {selectedUserId || '--'}) */}
             </Text>
           ) : (
             !Number.isNaN(selectedUserId) && (

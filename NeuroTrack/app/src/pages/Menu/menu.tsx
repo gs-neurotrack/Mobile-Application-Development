@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {View, Text,Modal, TouchableOpacity,  Image,  TextInput,  ActivityIndicator,  Alert,  ScrollView,} from 'react-native';
+import {View,  Text, Modal,  TouchableOpacity,  Image, TextInput,  ActivityIndicator, Alert, ScrollView,} from 'react-native';
 import { useRouter } from 'expo-router';
 import styles from './style';
 import MenuButton from '../../components/MenuButton/menubutton';
@@ -86,7 +86,7 @@ const MenuScreen = () => {
   return (
     <GlobalTouchTracker>
       <View style={styles.container}>
-   
+    
         <View style={styles.header}>
           <Image
             source={require('../../img/logo_neuro_track_branca.png')}
@@ -95,48 +95,55 @@ const MenuScreen = () => {
           />
         </View>
 
-
         <ScrollView
           style={{ flex: 1 }}
-          contentContainerStyle={styles.gridScroll} 
+          contentContainerStyle={styles.gridScroll}
           showsVerticalScrollIndicator={false}
         >
-          <MenuButton
-            icon="person-circle-outline"
-            label="Perfil"
-            onPress={() => router.push(ROUTES.PROFILE)}
-          />
+         
+          <View style={styles.menuGrid}>
+            <MenuButton
+              icon="person-circle-outline"
+              label="Perfil"
+              onPress={() => router.push(ROUTES.PROFILE)}
+              style={styles.menuItem}
+            />
 
-          <MenuButton
-            icon="eye-outline"
-            label="Ver Dados"
-            onPress={() => router.push(ROUTES.SCORES)}
-          />
+            <MenuButton
+              icon="eye-outline"
+              label="Ver Dados"
+              onPress={() => router.push(ROUTES.SCORES)}
+              style={styles.menuItem}
+            />
 
-          <MenuButton
-            icon="search-outline"
-            label="Buscar Usuários"
-            onPress={handleOpenAdminModal}
-          />
+            <MenuButton
+              icon="search-outline"
+              label="Buscar Usuários"
+              onPress={handleOpenAdminModal}
+              style={styles.menuItem}
+            />
 
-          <MenuButton
-            icon="information-circle-outline"
-            label="Sobre"
-            onPress={() => router.push(ROUTES.ABOUT)}
-          />
+            <MenuButton
+              icon="information-circle-outline"
+              label="Sobre"
+              onPress={() => router.push(ROUTES.ABOUT)}
+              style={styles.menuItem}
+            />
 
-          <TouchableOpacity
-            style={styles.buttonExit}
-            onPress={handleLogout}
-            disabled={ending}
-          >
-            {ending ? (
-              <ActivityIndicator color="#FFF" />
-            ) : (
-              <Text style={styles.buttonTextExit}>Encerrar expediente</Text>
-            )}
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.buttonExit, styles.menuItem]}
+              onPress={handleLogout}
+              disabled={ending}
+            >
+              {ending ? (
+                <ActivityIndicator color="#FFF" />
+              ) : (
+                <Text style={styles.buttonTextExit}>Encerrar expediente</Text>
+              )}
+            </TouchableOpacity>
+          </View>
 
+         
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Reuniões realizadas hoje</Text>
 
@@ -163,7 +170,7 @@ const MenuScreen = () => {
           </View>
         </ScrollView>
 
-      
+        
         <Modal
           visible={adminModalVisible}
           transparent

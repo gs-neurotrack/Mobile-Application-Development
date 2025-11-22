@@ -1,4 +1,3 @@
-// src/pages/Login/style.js
 import { StyleSheet } from 'react-native';
 const PRIMARIA = "#80c6ac";  
 

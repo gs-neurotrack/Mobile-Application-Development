@@ -1,28 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  ActivityIndicator,
-  Alert,
-  Modal,
-  FlatList,
-} from 'react-native';
+import { View,  Text,  TouchableOpacity,  Image, ScrollView, ActivityIndicator, Alert, Modal,  FlatList} from 'react-native';
 import { useRouter } from 'expo-router';
 import styles from './style';
 import InputField from '../../components/InputField/InputField';
 import { ROUTES } from '../../navigation/routes';
 
-import {
-  getUserById,
-  updateUserById,
-  deleteUserById,
-  getLoggedUserId,
-  logout,
-  User,
-} from '../../services/authService';
+import {  getUserById,  updateUserById,  deleteUserById,  getLoggedUserId,  logout,  User} from '../../services/authService';
 
 import { fetchLimits, GsLimit } from '../../services/limitsService';
 
@@ -68,9 +51,7 @@ const ProfileScreen = () => {
       ? limitOptions.find((l) => l.id === limitsId)?.label ?? 'Limite não informado'
       : 'Selecione seu limite';
 
-  // ==========================
-  // CARREGA DADOS DO USUÁRIO
-  // ==========================
+
   useEffect(() => {
     const loadUser = async () => {
       try {
@@ -109,9 +90,6 @@ const ProfileScreen = () => {
     loadUser();
   }, [router]);
 
-  // ==========================
-  // CARREGA LIMITES (horas / reuniões)
-  // ==========================
   useEffect(() => {
     const loadLimits = async () => {
       try {
@@ -138,9 +116,7 @@ const ProfileScreen = () => {
     loadLimits();
   }, []);
 
-  // ==========================
-  // SALVAR (NOME, EMAIL, LIMITE / REUNIÕES)
-  // ==========================
+
   const handleSave = async () => {
     if (!user) return;
 
@@ -169,9 +145,7 @@ const ProfileScreen = () => {
     }
   };
 
-  // ==========================
-  // EXCLUIR CONTA
-  // ==========================
+
   const handleDelete = () => {
     Alert.alert('Excluir conta', 'Tem certeza que deseja excluir sua conta?', [
       { text: 'Cancelar', style: 'cancel' },
@@ -197,9 +171,6 @@ const ProfileScreen = () => {
     ]);
   };
 
-  // ==========================
-  // ESTADOS DE CARREGAMENTO
-  // ==========================
   if (loading) {
     return (
       <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
@@ -217,9 +188,7 @@ const ProfileScreen = () => {
     );
   }
 
-  // ==========================
-  // RENDER
-  // ==========================
+
   return (
     <GlobalTouchTracker>
       <View style={styles.container}>
@@ -254,7 +223,7 @@ const ProfileScreen = () => {
             keyboardType="email-address"
           />
 
-          {/* Sem campo de senha agora */}
+     
 
           <Text style={styles.titleDate}>Cargo</Text>
           <View style={[styles.selectButton, { backgroundColor: '#f3f4f6' }]}>
@@ -284,16 +253,16 @@ const ProfileScreen = () => {
             <Text style={styles.buttonText}>{saving ? 'Salvando...' : 'Salvar alterações'}</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={[styles.button, { backgroundColor: '#E53935', marginTop: 10 }]}
             onPress={handleDelete}
             disabled={saving}
           >
             <Text style={styles.buttonText}>Excluir conta</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </ScrollView>
 
-        {/* MODAL DE LIMITES */}
+      
         <Modal
           visible={limitModalVisible}
           transparent
